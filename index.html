@@ -1174,21 +1174,6 @@
       sauvegarder();
       afficherContratsGeneres();
     };
-      
-      // Sauvegarder dans l'historique
-      const contrat = {
-        id: Date.now().toString(),
-        locataireId: locId,
-        appartementId: appt.id,
-        nomsLocataire,
-        dateDebut,
-        dateFin,
-        dateCreation: new Date().toISOString()
-      };
-      contrats.push(contrat);
-      sauvegarder();
-      afficherContratsGeneres();
-    };
 
     function genererContratProfessionnel(data) {
       const {
