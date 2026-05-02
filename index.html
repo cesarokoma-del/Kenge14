@@ -1612,68 +1612,102 @@ ${clauses ? `
   
   <div class="article">
     <h2>Article 1 – Les parties</h2>
-    <p><strong>Le Bailleur :</strong> M. Cesar OKOMA, domicilié au n° 15, Avenue de la Science, Quartier Socimat, Commune de la Gombe, Ville de Kinshasa.</p>
-    <p><strong>Le Preneur :</strong> ${c.nomsLocataire}, domicilié au ${c.adresseLocataire}.</p>
+    <p><strong>Le Bailleur :</strong> M. Cesar OKOMA, demeurant au n° 15, Avenue de la Science, Quartier Socimat, Commune de la Gombe, Ville de Kinshasa.</p>
+    <p><strong>Le Preneur :</strong> ${c.nomsLocataire}, demeurant au ${c.adresseLocataire}.</p>
+    <p>Il a été convenu et arrêté ce qui suit :</p>
   </div>
   
   <div class="article">
     <h2>Article 2 – Objet du bail</h2>
-    <p>Le Bailleur donne en location au Preneur qui accepte, un bien immobilier à usage d'<strong>HABITATION</strong>, situé au n° 14, Avenue Kenge, Quartier Mama Yemo, Commune de Ngaliema, Ville de Kinshasa.</p>
-    <p>Le bien loué comprend :</p>
+    <p>Le Bailleur donne en location au Preneur, qui accepte, l'immeuble sis au n° 14, Avenue Kenge, Quartier Mama Yemo, Commune de Ngaliema, Ville de Kinshasa, composé comme suit :</p>
     <p>• ${c.chambres} chambre${c.chambres > 1 ? 's' : ''}<br>
     • ${c.salons} salon${c.salons > 1 ? 's' : ''}<br>
     • ${c.sallesBain} salle${c.sallesBain > 1 ? 's' : ''} de bain<br>
     • ${c.autresElements}</p>
+    <p>Le Preneur reconnaît prendre les lieux loués dans l'état où ils se trouvent et s'engage à n'en changer la destination qu'avec l'accord préalable et écrit du Bailleur.</p>
+  </div>
+  
+  <div class="article">
+    <h2>Article 3 – Destination et occupation des lieux</h2>
+    <p>Le logement est exclusivement destiné à l'habitation du Preneur et des personnes expressément mentionnées au présent contrat.</p>
     <p>Le nombre maximum d'occupants est fixé à <strong>${c.occupants} personne${c.occupants > 1 ? 's' : ''}</strong>.</p>
+    <p>Toute occupation par un nombre supérieur constitue un manquement grave aux obligations contractuelles et pourra entraîner la résiliation du bail conformément à la législation en vigueur.</p>
+    <p>Le Preneur s'engage à informer le Bailleur de tout changement dans la composition du foyer.</p>
   </div>
   
   <div class="article">
-    <h2>Article 3 – Montant du loyer et garantie locative</h2>
-    <p>Le loyer mensuel est fixé à <strong>${loyerLettres} dollars américains (${c.loyer} USD)</strong>, payable le dernier jour de chaque mois de consommation avec une période de grâce de cinq (5) jours calendrier.</p>
-    <p>Une garantie locative de <strong>${garantieLettres} dollars américains (${c.garantie} USD)</strong> est versée ce jour à la signature du présent contrat.</p>
+    <h2>Article 4 – Loyer et charges</h2>
+    <p>Le présent bail est consenti et accepté moyennant le paiement d'un loyer mensuel de <strong>${loyerLettres} dollars américains (USD ${c.loyer})</strong>, payable à la fin de chaque mois consommé.</p>
+    <p>À la demande écrite et préalable du Preneur, une période de grâce de cinq (5) jours pourra être exceptionnellement accordée.</p>
+    <p>Les charges locatives, notamment celles relatives à la consommation d'eau (Regideso) et d'électricité (Snel), sont à la charge exclusive du Preneur.</p>
   </div>
   
   <div class="article">
-    <h2>Article 4 – Modalités de paiement</h2>
-    <p>Le loyer sera versé sur le compte bancaire suivant :</p>
-    <p><strong>EquityBCDC n° 233200011755382</strong></p>
-    <p>Ou via <strong>WhatsApp au +1 817 353 8862</strong></p>
-    <p>Le paiement du loyer devra être effectué au plus tard le dernier jour du mois de consommation, avec une période de grâce de cinq (5) jours calendrier.</p>
+    <h2>Article 5 – Modalités de paiement</h2>
+    <p>Le paiement du loyer s'effectuera par dépôt sur le compte bancaire <strong>EquityBCDC n° 233200011755382</strong>.</p>
+    <p>En cas d'impossibilité pour le Preneur d'effectuer lui-même le dépôt, le gérant pourra s'en charger moyennant une indemnité forfaitaire de cinq dollars américains (USD 5,00) pour frais de transport et de service.</p>
+    <p>Le Preneur devra transmettre le bordereau du dépôt au Bailleur via <strong>WhatsApp au numéro +1 817 353 8862</strong>, en précisant son nom ainsi que le mois concerné.</p>
+    <p>Le non-respect de cette procédure ou le défaut de paiement à l'échéance constituera un cas d'insolvabilité du Preneur.</p>
   </div>
   
   <div class="article">
-    <h2>Article 5 – Obligations du Preneur</h2>
-    <p>Le Preneur s'engage à :</p>
-    <p>• Payer le loyer aux échéances convenues<br>
-    • Entretenir le bien loué en bon père de famille<br>
-    • Ne pas sous-louer sans accord écrit du Bailleur<br>
-    • Respecter le règlement intérieur et les lois en vigueur</p>
+    <h2>Article 6 – Garantie locative</h2>
+    <p>À la signature du présent bail, le Preneur verse au Bailleur la somme de <strong>${garantieLettres} dollars américains (USD ${c.garantie})</strong> à titre de garantie locative.</p>
+    <p>Cette somme ne portera pas intérêt et sera restituée au Preneur à la fin du contrat, après déduction des éventuelles sommes dues au Bailleur, notamment au titre de réparations ou de remise en état des lieux.</p>
   </div>
   
   <div class="article">
-    <h2>Article 6 – Charges et réparations</h2>
-    <p>Les charges d'eau et d'électricité sont à la charge du Preneur. Les réparations locatives courantes sont également à sa charge.</p>
+    <h2>Article 7 – Obligations du Preneur</h2>
+    <p>Le Preneur s'engage à entretenir les lieux loués et à les restituer, à l'expiration du bail, dans l'état constaté lors de l'entrée en jouissance, sauf usure normale.</p>
+    <p>Il prendra en charge :</p>
+    <p>• La réparation de tout dégât imputable à sa responsabilité<br>
+    • Le remplacement de tout vitrage brisé ou endommagé de son fait<br>
+    • Les grosses réparations résultant de sa négligence ou de sa faute</p>
   </div>
   
   <div class="article">
-    <h2>Article 7 – Obligations du Bailleur</h2>
+    <h2>Article 8 – Obligations du Bailleur</h2>
     <p>Le Bailleur prendra à sa charge les grosses réparations qui ne sont pas imputables au Preneur.</p>
     <p>Toute modification ou réparation envisagée par le Preneur devra faire l'objet d'un accord préalable et écrit du Bailleur.</p>
   </div>
   
   <div class="article">
-    <h2>Article 8 – Durée du bail</h2>
+    <h2>Article 9 – Durée du bail</h2>
     <p>Le présent contrat est conclu pour une durée de <strong>${nombreEnTexte(c.duree)} (${c.duree}) mois</strong>, prenant effet le <strong>${debutFormate}</strong>, et renouvelable par tacite reconduction, sauf dénonciation ou résiliation dans les conditions prévues au présent contrat.</p>
   </div>
   
   <div class="article">
-    <h2>Article 9 – Préavis</h2>
-    <p>En cas de résiliation, un préavis de <strong>quatre-vingt-dix (90) jours</strong> devra être respecté par la partie qui souhaite mettre fin au bail.</p>
+    <h2>Article 10 – Droit de visite en fin de bail</h2>
+    <p>Durant les deux (2) mois précédant l'échéance du présent contrat, le Bailleur pourra organiser des visites de la parcelle au profit de candidats Preneurs, à raison de deux jours par semaine, à convenir avec le Preneur.</p>
+    <p>Cette disposition ne s'applique pas si le Preneur notifie, par écrit et dans les délais, sa volonté de renouveler le bail.</p>
+  </div>
+  
+  <div class="article">
+    <h2>Article 11 – Interdiction de sous-location et cession du bail</h2>
+    <p>Le Preneur s'interdit formellement de sous-louer tout ou partie du bien loué, sous quelque prétexte que ce soit.</p>
+    <p>Toute cession ou transfert du présent bail est soumis à l'autorisation préalable et écrite du Bailleur.</p>
+  </div>
+  
+  <div class="article">
+    <h2>Article 12 – État des lieux</h2>
+    <p>Un état des lieux contradictoire sera dressé entre les parties lors de l'entrée en jouissance et à la fin du contrat.</p>
+  </div>
+  
+  <div class="article">
+    <h2>Article 13 – Résiliation</h2>
+    <p>Chacune des parties pourra résilier le présent bail à tout moment, sans motif particulier, moyennant un préavis de <strong>quatre-vingt-dix (90) jours</strong>, notifié par écrit à l'autre partie, avec accusé de réception.</p>
+    <p>Le délai de préavis court à compter de la date de réception de la notification.</p>
+  </div>
+  
+  <div class="article">
+    <h2>Article 14 – Règlement des litiges</h2>
+    <p>Tout différend relatif à l'interprétation ou à l'exécution du présent contrat sera, dans un premier temps, réglé à l'amiable entre les parties.</p>
+    <p>En cas d'échec, le litige sera soumis à la compétence des juridictions compétentes de la République Démocratique du Congo.</p>
   </div>
   
   ${c.clauses ? `
   <div class="article">
-    <h2>Article 10 – Clauses spéciales</h2>
+    <h2>Article 15 – Clauses spéciales</h2>
     <p>${c.clauses}</p>
   </div>
   ` : ''}
