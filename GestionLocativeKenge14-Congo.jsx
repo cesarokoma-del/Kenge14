@@ -16,17 +16,11 @@ const GestionLocativeKenge14 = () => {
     loadData();
   }, []);
 
-  const loadData = async () => {
+  const loadData = () => {
     try {
-      const [apptsRes, locatairesRes, paiementsRes, deviseRes] = await Promise.all([
-        window.storage.get('appartements').catch(() => null),
-        window.storage.get('locataires').catch(() => null),
-        window.storage.get('paiements').catch(() => null),
-        window.storage.get('devise').catch(() => null)
-      ]);
-
-      if (apptsRes?.value) {
-        setAppartements(JSON.parse(apptsRes.value));
+      const apptsData = localStorage.getItem('appartements');
+      if (apptsData) {
+        setAppartements(JSON.parse(apptsData));
       } else {
         const initialAppts = [
           { id: '1', nom: 'APT-3RZ', loyer: 400, statut: 'loue', locataireId: '1' },
@@ -36,11 +30,12 @@ const GestionLocativeKenge14 = () => {
           { id: '5', nom: 'APT-1ER', loyer: 400, statut: 'vacant', locataireId: null }
         ];
         setAppartements(initialAppts);
-        await window.storage.set('appartements', JSON.stringify(initialAppts));
+        localStorage.setItem('appartements', JSON.stringify(initialAppts));
       }
 
-      if (locatairesRes?.value) {
-        setLocataires(JSON.parse(locatairesRes.value));
+      const locatairesData = localStorage.getItem('locataires');
+      if (locatairesData) {
+        setLocataires(JSON.parse(locatairesData));
       } else {
         const initialLocataires = [
           { id: '1', nom: 'Mme Adel Ndimina', telephone: '0816 562 277', appartementId: '1', dateEntree: '2024-01-01', garantie: 800 },
@@ -49,15 +44,17 @@ const GestionLocativeKenge14 = () => {
           { id: '4', nom: 'Mme Elisabeth Masinga', telephone: '0815 205 183', appartementId: '4', dateEntree: '2024-01-01', garantie: 800 }
         ];
         setLocataires(initialLocataires);
-        await window.storage.set('locataires', JSON.stringify(initialLocataires));
+        localStorage.setItem('locataires', JSON.stringify(initialLocataires));
       }
 
-      if (paiementsRes?.value) {
-        setPaiements(JSON.parse(paiementsRes.value));
+      const paiementsData = localStorage.getItem('paiements');
+      if (paiementsData) {
+        setPaiements(JSON.parse(paiementsData));
       }
 
-      if (deviseRes?.value) {
-        setDevise(deviseRes.value);
+      const deviseData = localStorage.getItem('devise');
+      if (deviseData) {
+        setDevise(deviseData);
       }
     } catch (error) {
       console.error('Erreur chargement:', error);
@@ -133,28 +130,28 @@ const GestionLocativeKenge14 = () => {
   }, [appartements, locataires, paiements]);
 
   // Sauvegarder
-  const saveAppartements = async (data) => {
+  const saveAppartements = (data) => {
     setAppartements(data);
-    await window.storage.set('appartements', JSON.stringify(data));
+    localStorage.setItem('appartements', JSON.stringify(data));
   };
 
-  const saveLocataires = async (data) => {
+  const saveLocataires = (data) => {
     setLocataires(data);
-    await window.storage.set('locataires', JSON.stringify(data));
+    localStorage.setItem('locataires', JSON.stringify(data));
   };
 
-  const savePaiements = async (data) => {
+  const savePaiements = (data) => {
     setPaiements(data);
-    await window.storage.set('paiements', JSON.stringify(data));
+    localStorage.setItem('paiements', JSON.stringify(data));
   };
 
-  const saveDevise = async (newDevise) => {
+  const saveDevise = (newDevise) => {
     setDevise(newDevise);
-    await window.storage.set('devise', newDevise);
+    localStorage.setItem('devise', newDevise);
   };
 
   // CRUD Appartements
-  const ajouterAppartement = async (data) => {
+  const ajouterAppartement = (data) => {
     const newAppt = {
       id: Date.now().toString(),
       nom: data.nom,
@@ -162,27 +159,27 @@ const GestionLocativeKenge14 = () => {
       statut: data.statut,
       locataireId: data.locataireId || null
     };
-    await saveAppartements([...appartements, newAppt]);
+    saveAppartements([...appartements, newAppt]);
     setShowModal(null);
   };
 
-  const modifierAppartement = async (data) => {
+  const modifierAppartement = (data) => {
     const updated = appartements.map(a => 
       a.id === editData.id ? { ...a, ...data, loyer: parseFloat(data.loyer) } : a
     );
-    await saveAppartements(updated);
+    saveAppartements(updated);
     setShowModal(null);
     setEditData(null);
   };
 
-  const supprimerAppartement = async (id) => {
+  const supprimerAppartement = (id) => {
     if (confirm('Supprimer cet appartement ?')) {
-      await saveAppartements(appartements.filter(a => a.id !== id));
+      saveAppartements(appartements.filter(a => a.id !== id));
     }
   };
 
   // CRUD Locataires
-  const ajouterLocataire = async (data) => {
+  const ajouterLocataire = (data) => {
     const newLoc = {
       id: Date.now().toString(),
       nom: data.nom,
@@ -191,27 +188,27 @@ const GestionLocativeKenge14 = () => {
       dateEntree: data.dateEntree,
       garantie: parseFloat(data.garantie) || 0
     };
-    await saveLocataires([...locataires, newLoc]);
+    saveLocataires([...locataires, newLoc]);
     setShowModal(null);
   };
 
-  const modifierLocataire = async (data) => {
+  const modifierLocataire = (data) => {
     const updated = locataires.map(l => 
       l.id === editData.id ? { ...l, ...data, garantie: parseFloat(data.garantie) || 0 } : l
     );
-    await saveLocataires(updated);
+    saveLocataires(updated);
     setShowModal(null);
     setEditData(null);
   };
 
-  const supprimerLocataire = async (id) => {
+  const supprimerLocataire = (id) => {
     if (confirm('Supprimer ce locataire ?')) {
-      await saveLocataires(locataires.filter(l => l.id !== id));
+      saveLocataires(locataires.filter(l => l.id !== id));
     }
   };
 
   // CRUD Paiements
-  const ajouterPaiement = async (data) => {
+  const ajouterPaiement = (data) => {
     const newPaiement = {
       id: Date.now().toString(),
       locataireId: data.locataireId,
@@ -221,13 +218,13 @@ const GestionLocativeKenge14 = () => {
       mois: data.mois,
       notes: data.notes || ''
     };
-    await savePaiements([...paiements, newPaiement]);
+    savePaiements([...paiements, newPaiement]);
     setShowModal(null);
   };
 
-  const supprimerPaiement = async (id) => {
+  const supprimerPaiement = (id) => {
     if (confirm('Supprimer ce paiement ?')) {
-      await savePaiements(paiements.filter(p => p.id !== id));
+      savePaiements(paiements.filter(p => p.id !== id));
     }
   };
 
