@@ -47,6 +47,12 @@
       <button id="nav-paiements" class="tab-btn px-6 py-4 font-medium border-b-4 border-transparent text-gray-600 hover:text-emerald-600">
         💰 Paiements
       </button>
+      <button id="nav-depenses" class="tab-btn px-6 py-4 font-medium border-b-4 border-transparent text-gray-600 hover:text-emerald-600">
+        📊 Dépenses
+      </button>
+      <button id="nav-contrats" class="tab-btn px-6 py-4 font-medium border-b-4 border-transparent text-gray-600 hover:text-emerald-600">
+        📄 Contrats
+      </button>
     </div>
   </nav>
 
@@ -55,7 +61,7 @@
     
     <!-- Dashboard Tab -->
     <div id="dashboard-tab" style="display:block;">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-6">
         <div class="bg-white rounded-2xl shadow-lg p-6 border-2 border-emerald-100">
           <div class="text-gray-600 text-sm font-medium mb-1">Total Appartements</div>
           <p class="text-3xl font-bold text-gray-800" id="totalAppts">5</p>
@@ -68,6 +74,11 @@
         <div class="bg-white rounded-2xl shadow-lg p-6 border-2 border-emerald-100">
           <div class="text-gray-600 text-sm font-medium mb-1">Revenu Mensuel</div>
           <p class="text-3xl font-bold text-gray-800" id="revenuTotal">1600 USD</p>
+        </div>
+        <div class="bg-white rounded-2xl shadow-lg p-6 border-2 border-green-100">
+          <div class="text-gray-600 text-sm font-medium mb-1">Revenue Actuelle</div>
+          <p class="text-3xl font-bold text-green-600" id="revenueActuelle">0 USD</p>
+          <p class="text-sm text-gray-500 mt-1">Paiements reçus</p>
         </div>
         <div class="bg-white rounded-2xl shadow-lg p-6 border-2 border-red-100">
           <div class="text-gray-600 text-sm font-medium mb-1">Loyers en Retard</div>
@@ -126,6 +137,100 @@
           </thead>
           <tbody id="paiementsList"></tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- Dépenses Tab -->
+    <div id="depenses-tab" style="display:none;">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-3xl font-bold text-gray-800">Gestion des Dépenses</h2>
+        <button onclick="ajouterDepense()" class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg">
+          ➕ Ajouter une dépense
+        </button>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div class="bg-white rounded-2xl shadow-lg p-6 border-2 border-red-100">
+          <div class="text-gray-600 text-sm font-medium mb-1">Total Dépenses</div>
+          <p class="text-3xl font-bold text-red-600" id="totalDepenses">0 USD</p>
+        </div>
+        <div class="bg-white rounded-2xl shadow-lg p-6 border-2 border-emerald-100">
+          <div class="text-gray-600 text-sm font-medium mb-1">Balance Nette</div>
+          <p class="text-3xl font-bold text-gray-800" id="balanceNette">0 USD</p>
+          <p class="text-sm text-gray-500 mt-1">Revenue - Dépenses</p>
+        </div>
+        <div class="bg-white rounded-2xl shadow-lg p-6 border-2 border-gray-100">
+          <div class="text-gray-600 text-sm font-medium mb-1">Dépenses ce mois</div>
+          <p class="text-3xl font-bold text-gray-800" id="depensesMois">0 USD</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-lg border border-emerald-100 overflow-hidden">
+        <table class="w-full">
+          <thead class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
+            <tr>
+              <th class="text-left px-6 py-4">Date</th>
+              <th class="text-left px-6 py-4">Catégorie</th>
+              <th class="text-left px-6 py-4">Description</th>
+              <th class="text-left px-6 py-4">Appartement</th>
+              <th class="text-left px-6 py-4">Montant</th>
+              <th class="text-left px-6 py-4">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="depensesList"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Contrats Tab -->
+    <div id="contrats-tab" style="display:none;">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-3xl font-bold text-gray-800">Contrats de Bail</h2>
+      </div>
+      
+      <div class="bg-white rounded-2xl shadow-lg p-6 border border-emerald-100">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">📄 Générer un Contrat de Bail</h3>
+        <p class="text-gray-600 mb-6">Sélectionnez un locataire pour générer son contrat de location</p>
+        
+        <form id="formContrat" class="space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Locataire</label>
+              <select id="contratLocataire" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+                <option value="">Choisir un locataire...</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Date de début</label>
+              <input type="date" id="contratDebut" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Durée (mois)</label>
+              <input type="number" id="contratDuree" value="12" min="1" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Type de bail</label>
+              <select id="contratType" class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+                <option value="habitation">Habitation</option>
+                <option value="commercial">Commercial</option>
+              </select>
+            </div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Clauses spéciales (optionnel)</label>
+            <textarea id="contratClauses" rows="3" class="w-full border-2 border-gray-300 rounded-lg px-4 py-2" placeholder="Ajoutez des clauses personnalisées..."></textarea>
+          </div>
+          
+          <button type="submit" class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-8 py-3 rounded-xl font-semibold hover:shadow-lg">
+            📄 Générer le Contrat PDF
+          </button>
+        </form>
+      </div>
+      
+      <div class="mt-6 bg-white rounded-2xl shadow-lg p-6 border border-emerald-100">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">📋 Contrats Générés</h3>
+        <div id="contratsGeneres" class="space-y-3"></div>
       </div>
     </div>
 
@@ -238,6 +343,61 @@
     </div>
   </div>
 
+  <div id="modalDepense" class="modal fixed inset-0 bg-black/50 backdrop-blur-sm items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full">
+      <div class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-4 flex items-center justify-between rounded-t-2xl">
+        <h2 class="text-2xl font-bold">Ajouter une Dépense</h2>
+        <button onclick="fermerModal('modalDepense')" class="text-2xl">✕</button>
+      </div>
+      <form id="formDepense" class="p-6 space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+            <input type="date" id="depenseDate" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Catégorie</label>
+            <select id="depenseCategorie" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+              <option value="">Sélectionner...</option>
+              <option value="reparation">Réparation</option>
+              <option value="entretien">Entretien</option>
+              <option value="travaux">Travaux</option>
+              <option value="taxes">Taxes/Impôts</option>
+              <option value="assurance">Assurance</option>
+              <option value="eau">Eau</option>
+              <option value="electricite">Électricité</option>
+              <option value="autre">Autre</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+          <input type="text" id="depenseDescription" required placeholder="Ex: Réparation toiture" class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Appartement concerné (optionnel)</label>
+            <select id="depenseAppartement" class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+              <option value="">Tous / Général</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Montant</label>
+            <input type="number" id="depenseMontant" step="0.01" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Notes (optionnel)</label>
+          <textarea id="depenseNotes" rows="2" class="w-full border-2 border-gray-300 rounded-lg px-4 py-2" placeholder="Notes additionnelles..."></textarea>
+        </div>
+        <div class="flex gap-3 mt-6">
+          <button type="button" onclick="fermerModal('modalDepense')" class="flex-1 bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-semibold">Annuler</button>
+          <button type="submit" class="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-lg font-semibold">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script>
     // Données initiales
     let appartements = JSON.parse(localStorage.getItem('appartements')) || [
@@ -256,6 +416,8 @@
     ];
 
     let paiements = JSON.parse(localStorage.getItem('paiements')) || [];
+    let depenses = JSON.parse(localStorage.getItem('depenses')) || [];
+    let contrats = JSON.parse(localStorage.getItem('contrats')) || [];
     let devise = localStorage.getItem('devise') || 'USD';
 
     // Fonction pour calculer la date limite (fin du mois + 5 jours)
@@ -306,6 +468,8 @@
       localStorage.setItem('appartements', JSON.stringify(appartements));
       localStorage.setItem('locataires', JSON.stringify(locataires));
       localStorage.setItem('paiements', JSON.stringify(paiements));
+      localStorage.setItem('depenses', JSON.stringify(depenses));
+      localStorage.setItem('contrats', JSON.stringify(contrats));
       localStorage.setItem('devise', devise);
       afficherTout();
     }
@@ -734,11 +898,292 @@
       document.getElementById('paiementsRecents').innerHTML = html;
     }
 
+    // === GESTION DES DÉPENSES ===
+    function afficherDepenses() {
+      const html = depenses
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .map(d => {
+          const appt = appartements.find(a => a.id === d.appartementId);
+          return `
+            <tr class="border-b border-gray-100 hover:bg-emerald-50">
+              <td class="px-6 py-4">${new Date(d.date).toLocaleDateString('fr-FR')}</td>
+              <td class="px-6 py-4"><span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">${d.categorie}</span></td>
+              <td class="px-6 py-4">${d.description}</td>
+              <td class="px-6 py-4">${appt?.nom || 'Général'}</td>
+              <td class="px-6 py-4 font-bold text-red-600">${d.montant} ${devise}</td>
+              <td class="px-6 py-4">
+                <button onclick="supprimerDepense('${d.id}')" class="text-red-500 hover:text-red-700">🗑️</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      document.getElementById('depensesList').innerHTML = html || '<tr><td colspan="6" class="text-center py-8 text-gray-500">Aucune dépense enregistrée</td></tr>';
+      
+      // Calculer les totaux
+      const totalDepenses = depenses.reduce((sum, d) => sum + d.montant, 0);
+      const revenueActuelle = paiements.reduce((sum, p) => sum + p.montant, 0);
+      const balance = revenueActuelle - totalDepenses;
+      
+      document.getElementById('totalDepenses').textContent = totalDepenses.toFixed(2) + ' ' + devise;
+      document.getElementById('balanceNette').textContent = balance.toFixed(2) + ' ' + devise;
+      
+      // Dépenses ce mois
+      const maintenant = new Date();
+      const debutMois = new Date(maintenant.getFullYear(), maintenant.getMonth(), 1);
+      const depensesMois = depenses
+        .filter(d => new Date(d.date) >= debutMois)
+        .reduce((sum, d) => sum + d.montant, 0);
+      document.getElementById('depensesMois').textContent = depensesMois.toFixed(2) + ' ' + devise;
+    }
+
+    function ajouterDepense() {
+      document.getElementById('depenseDate').value = new Date().toISOString().split('T')[0];
+      document.getElementById('depenseCategorie').value = '';
+      document.getElementById('depenseDescription').value = '';
+      document.getElementById('depenseMontant').value = '';
+      document.getElementById('depenseNotes').value = '';
+      
+      const select = document.getElementById('depenseAppartement');
+      select.innerHTML = '<option value="">Tous / Général</option>' + 
+        appartements.map(a => `<option value="${a.id}">${a.nom}</option>`).join('');
+      
+      ouvrirModal('modalDepense');
+    }
+
+    document.getElementById('formDepense').onsubmit = (e) => {
+      e.preventDefault();
+      const data = {
+        id: Date.now().toString(),
+        date: document.getElementById('depenseDate').value,
+        categorie: document.getElementById('depenseCategorie').value,
+        description: document.getElementById('depenseDescription').value,
+        appartementId: document.getElementById('depenseAppartement').value || null,
+        montant: parseFloat(document.getElementById('depenseMontant').value),
+        notes: document.getElementById('depenseNotes').value
+      };
+      
+      depenses.push(data);
+      sauvegarder();
+      fermerModal('modalDepense');
+    };
+
+    function supprimerDepense(id) {
+      if (confirm('Supprimer cette dépense ?')) {
+        depenses = depenses.filter(d => d.id !== id);
+        sauvegarder();
+      }
+    }
+
+    // === GESTION DES CONTRATS ===
+    document.getElementById('formContrat').onsubmit = (e) => {
+      e.preventDefault();
+      const locId = document.getElementById('contratLocataire').value;
+      const loc = locataires.find(l => l.id === locId);
+      const appt = appartements.find(a => a.id === loc.appartementId);
+      
+      const dateDebut = document.getElementById('contratDebut').value;
+      const duree = parseInt(document.getElementById('contratDuree').value);
+      const type = document.getElementById('contratType').value;
+      const clauses = document.getElementById('contratClauses').value;
+      
+      // Calculer date de fin
+      const debut = new Date(dateDebut);
+      const fin = new Date(debut);
+      fin.setMonth(fin.getMonth() + duree);
+      
+      genererContratPDF(loc, appt, dateDebut, fin.toISOString().split('T')[0], type, clauses);
+      
+      // Sauvegarder dans l'historique
+      const contrat = {
+        id: Date.now().toString(),
+        locataireId: locId,
+        appartementId: appt.id,
+        dateDebut,
+        dateFin: fin.toISOString().split('T')[0],
+        type,
+        dateCreation: new Date().toISOString()
+      };
+      contrats.push(contrat);
+      sauvegarder();
+      afficherContratsGeneres();
+    };
+
+    function genererContratPDF(locataire, appartement, dateDebut, dateFin, type, clauses) {
+      const debutFormate = new Date(dateDebut).toLocaleDateString('fr-FR');
+      const finFormate = new Date(dateFin).toLocaleDateString('fr-FR');
+      
+      const contratHTML = `<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Contrat de Bail - ${appartement.nom}</title>
+  <style>
+    body { font-family: 'Times New Roman', serif; max-width: 800px; margin: 40px auto; padding: 20px; line-height: 1.6; }
+    .header { text-align: center; border-bottom: 3px double #000; padding-bottom: 20px; margin-bottom: 30px; }
+    .header h1 { font-size: 24px; margin: 10px 0; text-transform: uppercase; }
+    .section { margin: 25px 0; }
+    .section h2 { font-size: 16px; text-transform: uppercase; border-bottom: 1px solid #000; padding-bottom: 5px; margin-bottom: 15px; }
+    .article { margin: 15px 0; text-align: justify; }
+    .article-title { font-weight: bold; margin-bottom: 5px; }
+    .signature-section { margin-top: 60px; display: flex; justify-content: space-between; }
+    .signature-box { width: 45%; }
+    .signature-line { border-top: 1px solid #000; margin-top: 60px; padding-top: 5px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Contrat de Bail d'Habitation</h1>
+    <p><strong>KENGE 14 - Gestion Locative</strong></p>
+    <p>République Démocratique du Congo</p>
+  </div>
+
+  <div class="section">
+    <h2>Article 1 - Les Parties</h2>
+    <div class="article">
+      <p><strong>Entre le bailleur :</strong></p>
+      <p>KENGE 14, propriétaire de l'immeuble situé à Kinshasa, Congo</p>
+      <p style="margin-top:15px;"><strong>Et le locataire :</strong></p>
+      <p>${locataire.nom}</p>
+      <p>Téléphone : ${locataire.telephone}</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Article 2 - Objet du Contrat</h2>
+    <div class="article">
+      <p>Le bailleur loue au locataire l'appartement désigné comme suit :</p>
+      <p><strong>Appartement ${appartement.nom}</strong></p>
+      <p>Type de bail : <strong>${type === 'habitation' ? 'Habitation' : 'Commercial'}</strong></p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Article 3 - Durée du Bail</h2>
+    <div class="article">
+      <p>Le présent bail est conclu pour une durée déterminée :</p>
+      <p><strong>Du ${debutFormate} au ${finFormate}</strong></p>
+      <p>À l'expiration de cette période, le bail pourra être renouvelé par accord mutuel des parties.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Article 4 - Loyer et Charges</h2>
+    <div class="article">
+      <p>Le loyer mensuel est fixé à <strong>${appartement.loyer} ${devise}</strong></p>
+      <p>Le loyer est payable mensuellement, à terme échu, conformément aux règles congolaises :</p>
+      <ul>
+        <li>Le loyer du mois de consommation est dû à la fin de ce mois</li>
+        <li>Un délai de grâce de 5 jours est accordé</li>
+        <li>Exemple : Le loyer d'avril est dû au plus tard le 5 mai</li>
+      </ul>
+      <p>Garantie (caution) : <strong>${locataire.garantie || appartement.loyer * 2} ${devise}</strong></p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Article 5 - Obligations du Locataire</h2>
+    <div class="article">
+      <p>Le locataire s'engage à :</p>
+      <ul>
+        <li>Payer le loyer aux échéances convenues</li>
+        <li>User des lieux loués paisiblement et en bon père de famille</li>
+        <li>Entretenir les lieux en bon état</li>
+        <li>Ne pas sous-louer sans autorisation écrite du bailleur</li>
+        <li>Respecter le règlement intérieur de l'immeuble</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Article 6 - Obligations du Bailleur</h2>
+    <div class="article">
+      <p>Le bailleur s'engage à :</p>
+      <ul>
+        <li>Délivrer au locataire les lieux loués en bon état</li>
+        <li>Assurer la jouissance paisible des lieux</li>
+        <li>Effectuer les réparations nécessaires à la conservation des lieux</li>
+      </ul>
+    </div>
+  </div>
+
+  ${clauses ? `
+  <div class="section">
+    <h2>Article 7 - Clauses Spéciales</h2>
+    <div class="article">
+      <p>${clauses.replace(/\n/g, '</p><p>')}</p>
+    </div>
+  </div>
+  ` : ''}
+
+  <div class="section">
+    <h2>Article ${clauses ? '8' : '7'} - Résiliation</h2>
+    <div class="article">
+      <p>Le présent bail peut être résilié :</p>
+      <ul>
+        <li>Par accord mutuel des parties</li>
+        <li>Pour non-paiement du loyer après mise en demeure restée sans effet</li>
+        <li>Pour non-respect des obligations contractuelles</li>
+      </ul>
+      <p>Un préavis de 3 mois est requis pour toute résiliation anticipée.</p>
+    </div>
+  </div>
+
+  <p style="margin-top:40px;text-align:center;"><strong>Fait à Kinshasa, le ${new Date().toLocaleDateString('fr-FR')}</strong></p>
+
+  <div class="signature-section">
+    <div class="signature-box">
+      <p><strong>Le Bailleur</strong></p>
+      <p>KENGE 14</p>
+      <div class="signature-line">Signature</div>
+    </div>
+    <div class="signature-box">
+      <p><strong>Le Locataire</strong></p>
+      <p>${locataire.nom}</p>
+      <div class="signature-line">Signature</div>
+    </div>
+  </div>
+</body>
+</html>`;
+
+      const blob = new Blob([contratHTML], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Contrat_Bail_${appartement.nom}_${locataire.nom.replace(/ /g, '_')}.html`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function afficherContratsGeneres() {
+      const html = contrats
+        .sort((a, b) => new Date(b.dateCreation) - new Date(a.dateCreation))
+        .map(c => {
+          const loc = locataires.find(l => l.id === c.locataireId);
+          const appt = appartements.find(a => a.id === c.appartementId);
+          return `
+            <div class="flex items-center justify-between p-4 bg-emerald-50 rounded-lg border border-emerald-200">
+              <div>
+                <p class="font-semibold text-gray-800">${loc?.nom || ''} - ${appt?.nom || ''}</p>
+                <p class="text-sm text-gray-600">Du ${new Date(c.dateDebut).toLocaleDateString('fr-FR')} au ${new Date(c.dateFin).toLocaleDateString('fr-FR')}</p>
+                <p class="text-xs text-gray-500">Créé le ${new Date(c.dateCreation).toLocaleDateString('fr-FR')}</p>
+              </div>
+              <div>
+                <span class="px-3 py-1 bg-emerald-600 text-white rounded-full text-sm">${c.type}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      document.getElementById('contratsGeneres').innerHTML = html || '<p class="text-center text-gray-500 py-4">Aucun contrat généré</p>';
+    }
+
     function afficherTout() {
       afficherAppartements();
       afficherLocataires();
       afficherPaiements();
       afficherPaiementsRecents();
+      afficherDepenses();
       
       document.getElementById('totalAppts').textContent = appartements.length;
       document.getElementById('loues').textContent = appartements.filter(a => a.statut === 'loue').length;
@@ -746,6 +1191,10 @@
       
       const revenu = appartements.filter(a => a.statut === 'loue').reduce((sum, a) => sum + a.loyer, 0);
       document.getElementById('revenuTotal').textContent = revenu + ' ' + devise;
+      
+      // Calculer la revenue actuelle (total des paiements)
+      const revenueActuelle = paiements.reduce((sum, p) => sum + p.montant, 0);
+      document.getElementById('revenueActuelle').textContent = revenueActuelle.toFixed(2) + ' ' + devise;
       
       // Calculer les loyers en retard
       let totalRetards = 0;
@@ -775,6 +1224,8 @@
       document.getElementById('appartements-tab').style.display = 'none';
       document.getElementById('locataires-tab').style.display = 'none';
       document.getElementById('paiements-tab').style.display = 'none';
+      document.getElementById('depenses-tab').style.display = 'none';
+      document.getElementById('contrats-tab').style.display = 'none';
       
       document.querySelectorAll('.tab-btn').forEach(b => {
         b.classList.remove('border-emerald-600', 'bg-emerald-50', 'text-emerald-700');
@@ -789,6 +1240,8 @@
       document.getElementById('appartements-tab').style.display = 'block';
       document.getElementById('locataires-tab').style.display = 'none';
       document.getElementById('paiements-tab').style.display = 'none';
+      document.getElementById('depenses-tab').style.display = 'none';
+      document.getElementById('contrats-tab').style.display = 'none';
       
       document.querySelectorAll('.tab-btn').forEach(b => {
         b.classList.remove('border-emerald-600', 'bg-emerald-50', 'text-emerald-700');
@@ -803,6 +1256,8 @@
       document.getElementById('appartements-tab').style.display = 'none';
       document.getElementById('locataires-tab').style.display = 'block';
       document.getElementById('paiements-tab').style.display = 'none';
+      document.getElementById('depenses-tab').style.display = 'none';
+      document.getElementById('contrats-tab').style.display = 'none';
       
       document.querySelectorAll('.tab-btn').forEach(b => {
         b.classList.remove('border-emerald-600', 'bg-emerald-50', 'text-emerald-700');
@@ -817,6 +1272,8 @@
       document.getElementById('appartements-tab').style.display = 'none';
       document.getElementById('locataires-tab').style.display = 'none';
       document.getElementById('paiements-tab').style.display = 'block';
+      document.getElementById('depenses-tab').style.display = 'none';
+      document.getElementById('contrats-tab').style.display = 'none';
       
       document.querySelectorAll('.tab-btn').forEach(b => {
         b.classList.remove('border-emerald-600', 'bg-emerald-50', 'text-emerald-700');
@@ -824,6 +1281,46 @@
       });
       this.classList.add('border-emerald-600', 'bg-emerald-50', 'text-emerald-700');
       this.classList.remove('border-transparent', 'text-gray-600');
+    };
+
+    document.getElementById('nav-depenses').onclick = function() {
+      document.getElementById('dashboard-tab').style.display = 'none';
+      document.getElementById('appartements-tab').style.display = 'none';
+      document.getElementById('locataires-tab').style.display = 'none';
+      document.getElementById('paiements-tab').style.display = 'none';
+      document.getElementById('depenses-tab').style.display = 'block';
+      document.getElementById('contrats-tab').style.display = 'none';
+      
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('border-emerald-600', 'bg-emerald-50', 'text-emerald-700');
+        b.classList.add('border-transparent', 'text-gray-600');
+      });
+      this.classList.add('border-emerald-600', 'bg-emerald-50', 'text-emerald-700');
+      this.classList.remove('border-transparent', 'text-gray-600');
+    };
+
+    document.getElementById('nav-contrats').onclick = function() {
+      document.getElementById('dashboard-tab').style.display = 'none';
+      document.getElementById('appartements-tab').style.display = 'none';
+      document.getElementById('locataires-tab').style.display = 'none';
+      document.getElementById('paiements-tab').style.display = 'none';
+      document.getElementById('depenses-tab').style.display = 'none';
+      document.getElementById('contrats-tab').style.display = 'block';
+      
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('border-emerald-600', 'bg-emerald-50', 'text-emerald-700');
+        b.classList.add('border-transparent', 'text-gray-600');
+      });
+      this.classList.add('border-emerald-600', 'bg-emerald-50', 'text-emerald-700');
+      this.classList.remove('border-transparent', 'text-gray-600');
+      
+      // Remplir le select des locataires pour les contrats
+      const select = document.getElementById('contratLocataire');
+      select.innerHTML = '<option value="">Choisir un locataire...</option>' + 
+        locataires.map(l => {
+          const appt = appartements.find(a => a.id === l.appartementId);
+          return `<option value="${l.id}">${l.nom} - ${appt?.nom || ''}</option>`;
+        }).join('');
     };
 
     // Initialiser
