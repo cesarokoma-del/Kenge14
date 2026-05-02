@@ -493,9 +493,9 @@
     let appartements = JSON.parse(localStorage.getItem('appartements')) || [
       { id: '1', nom: 'APT-3RZ', loyer: 400, statut: 'loue', locataireId: '1' },
       { id: '2', nom: 'APT-1CAV', loyer: 150, statut: 'loue', locataireId: '2' },
-      { id: '3', nom: 'APT-2A', loyer: 400, statut: 'loue', locataireId: '3' },
-      { id: '4', nom: 'APT-2B', loyer: 400, statut: 'loue', locataireId: '4' },
-      { id: '5', nom: 'APT-1ER', loyer: 400, statut: 'vacant', locataireId: null }
+      { id: '3', nom: 'APT-2A', loyer: 300, statut: 'loue', locataireId: '3' },
+      { id: '4', nom: 'APT-2B', loyer: 300, statut: 'loue', locataireId: '4' },
+      { id: '5', nom: 'APT-1ER', loyer: 100, statut: 'vacant', locataireId: null }
     ];
 
     let locataires = JSON.parse(localStorage.getItem('locataires')) || [
@@ -1072,7 +1072,7 @@
         sallesBain: 2,
         autresElements: 'une cuisine',
         occupants: 6,
-        loyer: 400
+        loyer: 300
       },
       'APT-2B': {
         nom: 'APT-2B',
@@ -1081,7 +1081,7 @@
         sallesBain: 2,
         autresElements: 'une cuisine',
         occupants: 6,
-        loyer: 400
+        loyer: 300
       },
       'APT-1ER': {
         nom: 'APT-1ER',
@@ -1090,7 +1090,7 @@
         sallesBain: 0,
         autresElements: 'un studio avec douche-toilette externe',
         occupants: 2,
-        loyer: 400
+        loyer: 100
       }
     };
     
