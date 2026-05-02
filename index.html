@@ -290,9 +290,9 @@
     // Générer les 6 derniers mois
     function getDerniersMois(nb = 6) {
       const mois = [];
-      const aujourd'hui = new Date();
+      const aujourdhui = new Date();
       for (let i = nb - 1; i >= 0; i--) {
-        const d = new Date(aujourd'hui.getFullYear(), aujourd'hui.getMonth() - i, 1);
+        const d = new Date(aujourdhui.getFullYear(), aujourdhui.getMonth() - i, 1);
         mois.push({
           str: d.toISOString().slice(0, 7),
           nom: d.toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' })
