@@ -254,16 +254,34 @@
           <!-- Section Financière -->
           <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
             <h4 class="font-bold text-gray-800 mb-3">💰 Informations Financières</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Loyer mensuel (USD) *</label>
-                <input type="number" id="contratLoyer" step="0.01" required readonly class="w-full border-2 border-gray-300 rounded-lg px-4 py-2 bg-gray-100">
+                <input type="number" id="contratLoyer" step="0.01" required readonly class="w-full border-2 border-gray-300 rounded-lg px-4 py-2 bg-gray-100 font-bold text-lg">
                 <p class="text-xs text-gray-500 mt-1">Automatique selon l'appartement</p>
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Garantie locative (USD) *</label>
-                <input type="number" id="contratGarantie" step="0.01" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
-                <p class="text-xs text-gray-500 mt-1">Suggestion: 4x le loyer</p>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Nombre de mois de garantie *</label>
+                <select id="contratMoisGarantie" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+                  <option value="1">1 mois</option>
+                  <option value="2">2 mois</option>
+                  <option value="3">3 mois</option>
+                  <option value="4" selected>4 mois</option>
+                  <option value="5">5 mois</option>
+                  <option value="6">6 mois</option>
+                  <option value="7">7 mois</option>
+                  <option value="8">8 mois</option>
+                  <option value="9">9 mois</option>
+                  <option value="10">10 mois</option>
+                  <option value="11">11 mois</option>
+                  <option value="12">12 mois</option>
+                </select>
+                <p class="text-xs text-gray-500 mt-1">Multiplier le loyer par...</p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Garantie totale (USD) *</label>
+                <input type="number" id="contratGarantie" step="0.01" required readonly class="w-full border-2 border-emerald-300 rounded-lg px-4 py-2 bg-emerald-50 font-bold text-lg text-emerald-700">
+                <p class="text-xs text-gray-500 mt-1">Loyer × Nombre de mois</p>
               </div>
             </div>
           </div>
@@ -1076,6 +1094,14 @@
       }
     };
     
+    // Fonction pour calculer la garantie
+    function calculerGarantie() {
+      const loyer = parseFloat(document.getElementById('contratLoyer').value) || 0;
+      const mois = parseInt(document.getElementById('contratMoisGarantie').value) || 4;
+      const garantie = loyer * mois;
+      document.getElementById('contratGarantie').value = garantie.toFixed(2);
+    }
+    
     // Event listener pour remplir automatiquement les infos quand on sélectionne un appartement
     document.getElementById('contratAppartement').onchange = function() {
       const apptNom = this.value;
@@ -1099,8 +1125,13 @@
         document.getElementById('contratAutresElements').value = apptInfo.autresElements;
         document.getElementById('contratOccupants').value = apptInfo.occupants;
         document.getElementById('contratLoyer').value = apptInfo.loyer;
-        document.getElementById('contratGarantie').value = apptInfo.loyer * 4; // 4 mois de garantie
+        calculerGarantie(); // Calculer la garantie automatiquement
       }
+    };
+    
+    // Event listener pour recalculer la garantie quand on change le nombre de mois
+    document.getElementById('contratMoisGarantie').onchange = function() {
+      calculerGarantie();
     };
     
     // Calculer automatiquement la date de fin
