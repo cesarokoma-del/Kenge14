@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KENGE 14 - Gestion Locative</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -1374,7 +1375,7 @@ ci-après dénommé${nomsLocataire.includes('Mme') || nomsLocataire.includes('Ma
 
 <div class="article">
   <h2>Article 8 – Durée du bail</h2>
-  <p>Le présent contrat est conclu pour une durée de <strong>${nombreEnTexte(duree)} (${duree}) ${duree > 1 ? 'années' : 'année'}</strong>, prenant effet le <strong>${debutFormate}</strong>, et renouvelable par tacite reconduction, sauf dénonciation ou résiliation dans les conditions prévues au présent contrat.</p>
+  <p>Le présent contrat est conclu pour une durée de <strong>${nombreEnTexte(duree)} (${duree}) mois</strong>, prenant effet le <strong>${debutFormate}</strong>, et renouvelable par tacite reconduction, sauf dénonciation ou résiliation dans les conditions prévues au présent contrat.</p>
 </div>
 
 <div class="article">
@@ -1441,17 +1442,27 @@ ${clauses ? `
 </body>
 </html>`;
 
-      const blob = new Blob([contratHTML], { type: 'text/html' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `Contrat_de_Bail_${nomsLocataire.replace(/ /g, '_').replace(/\./g, '')}.html`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      // Créer un élément temporaire pour le contenu
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = contratHTML;
+      tempDiv.style.position = 'absolute';
+      tempDiv.style.left = '-9999px';
+      document.body.appendChild(tempDiv);
       
-      alert('Contrat généré avec succès! Le fichier a été téléchargé.');
+      // Options pour html2pdf
+      const opt = {
+        margin: [15, 15, 15, 15],
+        filename: `Contrat_de_Bail_${nomsLocataire.replace(/ /g, '_').replace(/\./g, '')}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+      
+      // Générer et télécharger le PDF
+      html2pdf().set(opt).from(tempDiv).save().then(() => {
+        document.body.removeChild(tempDiv);
+        alert('Contrat PDF généré avec succès! Le fichier a été téléchargé.\n\nVous pouvez maintenant l\'envoyer sur WhatsApp.');
+      });
     }
 
     // Fonction pour convertir nombres en lettres (simplifiée)
