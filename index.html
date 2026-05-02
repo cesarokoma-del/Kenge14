@@ -1442,154 +1442,25 @@ ${clauses ? `
 </body>
 </html>`;
 
-      // Créer un div temporaire avec le contenu directement formaté
-      const tempDiv = document.createElement('div');
-      tempDiv.style.cssText = `
-        position: absolute;
-        left: -9999px;
-        width: 210mm;
-        background: white;
-        font-family: 'Times New Roman', Times, serif;
-        font-size: 12pt;
-        line-height: 1.6;
-        padding: 20px;
-        color: black;
-      `;
-      
-      tempDiv.innerHTML = `
-        <style>
-          .contract-container { max-width: 800px; margin: 0 auto; }
-          h1 { text-align: center; font-size: 18pt; margin: 20px 0; text-transform: uppercase; font-weight: bold; }
-          h2 { font-size: 14pt; margin-top: 25px; margin-bottom: 10px; font-weight: bold; }
-          p { text-align: justify; margin-bottom: 15px; line-height: 1.8; }
-          .article { margin-bottom: 30px; page-break-inside: avoid; }
-          .signature-section { display: flex; justify-content: space-between; margin-top: 50px; }
-          .signature-box { flex: 1; margin: 0 10px; }
-          .signature-line { border-top: 1px solid black; margin-top: 50px; padding-top: 5px; }
-          strong { font-weight: bold; }
-        </style>
-        
-        <div class="contract-container">
-          <h1>CONTRAT DE BAIL D'HABITATION</h1>
-          
-          <div class="article">
-            <h2>Article 1 – Les parties</h2>
-            <p><strong>Le Bailleur :</strong> M. Cesar OKOMA, domicilié au n° 15, Avenue de la Science, Quartier Socimat, Commune de la Gombe, Ville de Kinshasa.</p>
-            <p><strong>Le Preneur :</strong> ${nomsLocataire}, domicilié au ${adresseLocataire}.</p>
-          </div>
-          
-          <div class="article">
-            <h2>Article 2 – Objet du bail</h2>
-            <p>Le Bailleur donne en location au Preneur qui accepte, un bien immobilier à usage d'<strong>HABITATION</strong>, situé au n° 14, Avenue Kenge, Quartier Mama Yemo, Commune de Ngaliema, Ville de Kinshasa.</p>
-            <p>Le bien loué comprend :</p>
-            <p>${descriptionAppt}</p>
-            <p>Le nombre maximum d'occupants est fixé à <strong>${occupants} personnes</strong>.</p>
-          </div>
-          
-          <div class="article">
-            <h2>Article 3 – Montant du loyer et garantie locative</h2>
-            <p>Le loyer mensuel est fixé à <strong>${loyerLettres} dollars américains (${loyer} USD)</strong>, payable le dernier jour de chaque mois de consommation avec une période de grâce de cinq (5) jours calendrier.</p>
-            <p>Une garantie locative de <strong>${garantieLettres} dollars américains (${garantie} USD)</strong> est versée ce jour à la signature du présent contrat.</p>
-          </div>
-          
-          <div class="article">
-            <h2>Article 4 – Modalités de paiement</h2>
-            <p>Le loyer sera versé sur le compte bancaire suivant :</p>
-            <p><strong>EquityBCDC n° 233200011755382</strong></p>
-            <p>Ou via <strong>WhatsApp au +1 817 353 8862</strong></p>
-            <p>Le paiement du loyer devra être effectué au plus tard le dernier jour du mois de consommation, avec une période de grâce de cinq (5) jours calendrier.</p>
-          </div>
-          
-          <div class="article">
-            <h2>Article 5 – Obligations du Preneur</h2>
-            <p>Le Preneur s'engage à :</p>
-            <p>• Payer le loyer aux échéances convenues;<br>
-            • Entretenir le bien loué en bon père de famille;<br>
-            • Ne pas sous-louer sans accord écrit du Bailleur;<br>
-            • Respecter le règlement intérieur et les lois en vigueur.</p>
-          </div>
-          
-          <div class="article">
-            <h2>Article 6 – Charges et réparations</h2>
-            <p>Les charges d'eau et d'électricité sont à la charge du Preneur. Les réparations locatives courantes sont également à sa charge.</p>
-          </div>
-          
-          <div class="article">
-            <h2>Article 7 – Obligations du Bailleur</h2>
-            <p>Le Bailleur prendra à sa charge les grosses réparations qui ne sont pas imputables au Preneur.</p>
-            <p>Toute modification ou réparation envisagée par le Preneur devra faire l'objet d'un accord préalable et écrit du Bailleur.</p>
-          </div>
-          
-          <div class="article">
-            <h2>Article 8 – Durée du bail</h2>
-            <p>Le présent contrat est conclu pour une durée de <strong>${nombreEnTexte(duree)} (${duree}) mois</strong>, prenant effet le <strong>${debutFormate}</strong>, et renouvelable par tacite reconduction, sauf dénonciation ou résiliation dans les conditions prévues au présent contrat.</p>
-          </div>
-          
-          <div class="article">
-            <h2>Article 9 – Préavis</h2>
-            <p>En cas de résiliation, un préavis de <strong>quatre-vingt-dix (90) jours</strong> devra être respecté par la partie qui souhaite mettre fin au bail.</p>
-          </div>
-          
-          <div class="signature-section">
-            <div class="signature-box">
-              <p><strong>Le Bailleur</strong></p>
-              <div class="signature-line">M. Cesar OKOMA</div>
-            </div>
-            
-            <div class="signature-box">
-              <p><strong>Le Preneur</strong></p>
-              <div class="signature-line">${nomsLocataire}</div>
-            </div>
-          </div>
-          
-          <p style="text-align: center; margin-top: 30px;"><em>Fait à Kinshasa, le ${aujourdhui}</em></p>
-        </div>
-      `;
-      
-      document.body.appendChild(tempDiv);
-      
-      // Options pour html2pdf - Version simplifiée
-      const opt = {
-        margin: 10,
-        filename: `Contrat_de_Bail_${nomsLocataire.replace(/ /g, '_').replace(/\./g, '')}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { 
-          scale: 2,
-          useCORS: true,
-          logging: false,
-          backgroundColor: '#ffffff'
-        },
-        jsPDF: { 
-          unit: 'mm', 
-          format: 'a4', 
-          orientation: 'portrait' 
-        },
-        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+      // Sauvegarder le contrat dans l'historique avec le HTML complet
+      const contrat = {
+        id: Date.now().toString(),
+        appartementNom: apptNom,
+        nomsLocataire,
+        dateDebut,
+        dateFin,
+        dateCreation: new Date().toISOString(),
+        contratHTML: contratHTML  // Sauvegarder le HTML complet
       };
+      contrats.push(contrat);
+      sauvegarder();
+      afficherContratsGeneres();
       
-      // Générer le PDF
-      html2pdf().set(opt).from(tempDiv).save()
-        .then(() => {
-          document.body.removeChild(tempDiv);
-          alert('✅ Contrat PDF généré avec succès!\n\nLe fichier a été téléchargé.\nVous pouvez maintenant l\'envoyer sur WhatsApp.');
-        })
-        .catch(err => {
-          console.error('Erreur PDF:', err);
-          document.body.removeChild(tempDiv);
-          
-          // Plan B: Télécharger en HTML si PDF échoue
-          const blob = new Blob([contratHTML], { type: 'text/html' });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `Contrat_de_Bail_${nomsLocataire.replace(/ /g, '_')}.html`;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-          
-          alert('⚠️ Le PDF n\'a pas pu être généré.\n\nUn fichier HTML a été téléchargé à la place.\nVous pouvez l\'ouvrir dans votre navigateur et faire "Imprimer > Enregistrer en PDF".');
-        });
+      // Réinitialiser le formulaire
+      document.getElementById('formContrat').reset();
+      
+      // Message de succès
+      alert('✅ Contrat créé avec succès!\n\nVous pouvez maintenant le visualiser dans la liste ci-dessous.');
     }
 
     // Fonction pour convertir nombres en lettres (simplifiée)
@@ -1637,18 +1508,49 @@ ${clauses ? `
         .map(c => {
           return `
             <div class="flex items-center justify-between p-4 bg-emerald-50 rounded-lg border border-emerald-200">
-              <div>
+              <div class="flex-1">
                 <p class="font-semibold text-gray-800">${c.nomsLocataire || 'Locataire'} - ${c.appartementNom || 'Appartement'}</p>
                 <p class="text-sm text-gray-600">Du ${new Date(c.dateDebut).toLocaleDateString('fr-FR')} au ${new Date(c.dateFin).toLocaleDateString('fr-FR')}</p>
                 <p class="text-xs text-gray-500">Créé le ${new Date(c.dateCreation).toLocaleDateString('fr-FR')}</p>
               </div>
-              <div>
+              <div class="flex items-center gap-3">
                 <span class="px-3 py-1 bg-emerald-600 text-white rounded-full text-sm">Habitation</span>
+                <button onclick="voirContrat('${c.id}')" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold">
+                  📄 Voir le contrat
+                </button>
+                <button onclick="supprimerContrat('${c.id}')" class="px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                  🗑️
+                </button>
               </div>
             </div>
           `;
         }).join('');
       document.getElementById('contratsGeneres').innerHTML = html || '<p class="text-center text-gray-500 py-4">Aucun contrat généré</p>';
+    }
+    
+    function voirContrat(contratId) {
+      const contrat = contrats.find(c => c.id === contratId);
+      if (!contrat || !contrat.contratHTML) {
+        alert('❌ Erreur: Contrat introuvable');
+        return;
+      }
+      
+      // Ouvrir le contrat dans une nouvelle fenêtre
+      const newWindow = window.open('', '_blank');
+      newWindow.document.write(contrat.contratHTML);
+      newWindow.document.close();
+    }
+    
+    function supprimerContrat(contratId) {
+      if (!confirm('Êtes-vous sûr de vouloir supprimer ce contrat?')) return;
+      
+      const index = contrats.findIndex(c => c.id === contratId);
+      if (index !== -1) {
+        contrats.splice(index, 1);
+        sauvegarder();
+        afficherContratsGeneres();
+        alert('✅ Contrat supprimé avec succès');
+      }
     }
 
     function afficherTout() {
