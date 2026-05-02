@@ -190,40 +190,102 @@
       
       <div class="bg-white rounded-2xl shadow-lg p-6 border border-emerald-100">
         <h3 class="text-xl font-bold text-gray-800 mb-4">📄 Générer un Contrat de Bail</h3>
-        <p class="text-gray-600 mb-6">Sélectionnez un locataire pour générer son contrat de location</p>
+        <p class="text-gray-600 mb-6">Remplissez les informations pour générer le contrat professionnel</p>
         
-        <form id="formContrat" class="space-y-4">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Locataire</label>
-              <select id="contratLocataire" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
-                <option value="">Choisir un locataire...</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Date de début</label>
-              <input type="date" id="contratDebut" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Durée (mois)</label>
-              <input type="number" id="contratDuree" value="12" min="1" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Type de bail</label>
-              <select id="contratType" class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
-                <option value="habitation">Habitation</option>
-                <option value="commercial">Commercial</option>
-              </select>
+        <form id="formContrat" class="space-y-6">
+          <!-- Section Locataire -->
+          <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+            <h4 class="font-bold text-gray-800 mb-3">👤 Informations du Locataire</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Locataire</label>
+                <select id="contratLocataire" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+                  <option value="">Choisir un locataire...</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Noms complets du locataire *</label>
+                <input type="text" id="contratNomsLocataire" required placeholder="Ex: Mme Ndimina KYEMBE Adel" class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+              </div>
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Adresse complète du locataire *</label>
+                <input type="text" id="contratAdresseLocataire" required placeholder="Ex: n° 3, Avenue Panda, Commune de Ngaliema, Ville de Kinshasa" class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+              </div>
             </div>
           </div>
-          
+
+          <!-- Section Appartement -->
+          <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-200">
+            <h4 class="font-bold text-gray-800 mb-3">🏠 Description de l'Appartement</h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Nombre de chambres *</label>
+                <input type="number" id="contratChambres" value="3" min="1" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Salons</label>
+                <input type="number" id="contratSalons" value="1" min="0" class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Salles de bain *</label>
+                <input type="number" id="contratSallesBain" value="2" min="1" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+              </div>
+            </div>
+            <div class="mt-4">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Autres éléments (salle à manger, cuisine, etc.)</label>
+              <textarea id="contratAutresElements" rows="2" class="w-full border-2 border-gray-300 rounded-lg px-4 py-2" placeholder="Ex: une salle à manger, une cuisine, un garde-manger">une salle à manger, une cuisine, un garde-manger</textarea>
+            </div>
+            <div class="mt-4">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Nombre maximum d'occupants</label>
+              <input type="number" id="contratOccupants" value="8" min="1" class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+            </div>
+          </div>
+
+          <!-- Section Financière -->
+          <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+            <h4 class="font-bold text-gray-800 mb-3">💰 Informations Financières</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Loyer mensuel *</label>
+                <input type="number" id="contratLoyer" step="0.01" required readonly class="w-full border-2 border-gray-300 rounded-lg px-4 py-2 bg-gray-100">
+                <p class="text-xs text-gray-500 mt-1">Automatique selon l'appartement</p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Garantie locative (USD) *</label>
+                <input type="number" id="contratGarantie" step="0.01" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+                <p class="text-xs text-gray-500 mt-1">Suggestion: 4x le loyer</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section Dates -->
+          <div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
+            <h4 class="font-bold text-gray-800 mb-3">📅 Durée du Contrat</h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Date de début *</label>
+                <input type="date" id="contratDebut" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Durée (mois) *</label>
+                <input type="number" id="contratDuree" value="12" min="1" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Date de fin *</label>
+                <input type="date" id="contratFin" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2 bg-gray-100" readonly>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section Clauses -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Clauses spéciales (optionnel)</label>
-            <textarea id="contratClauses" rows="3" class="w-full border-2 border-gray-300 rounded-lg px-4 py-2" placeholder="Ajoutez des clauses personnalisées..."></textarea>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Clauses spéciales additionnelles (optionnel)</label>
+            <textarea id="contratClauses" rows="3" class="w-full border-2 border-gray-300 rounded-lg px-4 py-2" placeholder="Ajoutez des clauses personnalisées si nécessaire..."></textarea>
+            <p class="text-xs text-gray-500 mt-1">Le contrat standard inclut déjà tous les articles requis</p>
           </div>
           
-          <button type="submit" class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-8 py-3 rounded-xl font-semibold hover:shadow-lg">
-            📄 Générer le Contrat PDF
+          <button type="submit" class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:shadow-lg w-full">
+            📄 Générer le Contrat Professionnel
           </button>
         </form>
       </div>
@@ -975,32 +1037,89 @@
     }
 
     // === GESTION DES CONTRATS ===
+    
+    // Event listener pour remplir automatiquement les infos quand on sélectionne un locataire
+    document.getElementById('contratLocataire').onchange = function() {
+      const locId = this.value;
+      if (!locId) return;
+      
+      const loc = locataires.find(l => l.id === locId);
+      const appt = appartements.find(a => a.id === loc.appartementId);
+      
+      if (loc && appt) {
+        document.getElementById('contratLoyer').value = appt.loyer;
+        document.getElementById('contratGarantie').value = appt.loyer * 4; // 4 mois de garantie
+      }
+    };
+    
+    // Calculer automatiquement la date de fin
+    document.getElementById('contratDebut').onchange = function() {
+      calculerDateFin();
+    };
+    document.getElementById('contratDuree').onchange = function() {
+      calculerDateFin();
+    };
+    
+    function calculerDateFin() {
+      const debut = document.getElementById('contratDebut').value;
+      const duree = parseInt(document.getElementById('contratDuree').value);
+      
+      if (debut && duree) {
+        const dateDebut = new Date(debut);
+        const dateFin = new Date(dateDebut);
+        dateFin.setMonth(dateFin.getMonth() + duree);
+        dateFin.setDate(dateFin.getDate() - 1); // Un jour avant pour avoir la bonne date de fin
+        document.getElementById('contratFin').value = dateFin.toISOString().split('T')[0];
+      }
+    }
+    
     document.getElementById('formContrat').onsubmit = (e) => {
       e.preventDefault();
+      
       const locId = document.getElementById('contratLocataire').value;
       const loc = locataires.find(l => l.id === locId);
       const appt = appartements.find(a => a.id === loc.appartementId);
       
+      const nomsLocataire = document.getElementById('contratNomsLocataire').value;
+      const adresseLocataire = document.getElementById('contratAdresseLocataire').value;
       const dateDebut = document.getElementById('contratDebut').value;
-      const duree = parseInt(document.getElementById('contratDuree').value);
-      const type = document.getElementById('contratType').value;
+      const dateFin = document.getElementById('contratFin').value;
+      const chambres = document.getElementById('contratChambres').value;
+      const salons = document.getElementById('contratSalons').value;
+      const sallesBain = document.getElementById('contratSallesBain').value;
+      const autresElements = document.getElementById('contratAutresElements').value;
+      const occupants = document.getElementById('contratOccupants').value;
+      const loyer = document.getElementById('contratLoyer').value;
+      const garantie = document.getElementById('contratGarantie').value;
+      const duree = document.getElementById('contratDuree').value;
       const clauses = document.getElementById('contratClauses').value;
       
-      // Calculer date de fin
-      const debut = new Date(dateDebut);
-      const fin = new Date(debut);
-      fin.setMonth(fin.getMonth() + duree);
-      
-      genererContratPDF(loc, appt, dateDebut, fin.toISOString().split('T')[0], type, clauses);
+      genererContratProfessionnel({
+        locataire: loc,
+        appartement: appt,
+        nomsLocataire,
+        adresseLocataire,
+        dateDebut,
+        dateFin,
+        chambres,
+        salons,
+        sallesBain,
+        autresElements,
+        occupants,
+        loyer,
+        garantie,
+        duree,
+        clauses
+      });
       
       // Sauvegarder dans l'historique
       const contrat = {
         id: Date.now().toString(),
         locataireId: locId,
         appartementId: appt.id,
+        nomsLocataire,
         dateDebut,
-        dateFin: fin.toISOString().split('T')[0],
-        type,
+        dateFin,
         dateCreation: new Date().toISOString()
       };
       contrats.push(contrat);
@@ -1008,140 +1127,238 @@
       afficherContratsGeneres();
     };
 
-    function genererContratPDF(locataire, appartement, dateDebut, dateFin, type, clauses) {
-      const debutFormate = new Date(dateDebut).toLocaleDateString('fr-FR');
-      const finFormate = new Date(dateFin).toLocaleDateString('fr-FR');
+    function genererContratProfessionnel(data) {
+      const {
+        locataire, appartement, nomsLocataire, adresseLocataire,
+        dateDebut, dateFin, chambres, salons, sallesBain, autresElements,
+        occupants, loyer, garantie, duree, clauses
+      } = data;
+      
+      const debutFormate = new Date(dateDebut).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+      const finFormate = new Date(dateFin).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+      const aujourdhui = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+      
+      // Convertir montants en toutes lettres (simple)
+      const loyerLettres = nombreEnLettres(parseFloat(loyer));
+      const garantieLettres = nombreEnLettres(parseFloat(garantie));
+      
+      // Construire la description de l'appartement
+      let descriptionAppt = '';
+      if (chambres > 0) descriptionAppt += `• ${nombreEnTexte(chambres)} (${chambres}) chambre${chambres > 1 ? 's' : ''},\n`;
+      if (salons > 0) descriptionAppt += `• ${nombreEnTexte(salons)} salon${salons > 1 ? 's' : ''},\n`;
+      if (sallesBain > 0) descriptionAppt += `• ${nombreEnTexte(sallesBain)} (${sallesBain}) salle${sallesBain > 1 ? 's' : ''} de bain${sallesBain > 1 ? '' : ''}.\n`;
+      if (autresElements) descriptionAppt += `• ${autresElements}.\n`;
       
       const contratHTML = `<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Contrat de Bail - ${appartement.nom}</title>
+  <title>Contrat de Bail - ${nomsLocataire}</title>
   <style>
-    body { font-family: 'Times New Roman', serif; max-width: 800px; margin: 40px auto; padding: 20px; line-height: 1.6; }
-    .header { text-align: center; border-bottom: 3px double #000; padding-bottom: 20px; margin-bottom: 30px; }
-    .header h1 { font-size: 24px; margin: 10px 0; text-transform: uppercase; }
-    .section { margin: 25px 0; }
-    .section h2 { font-size: 16px; text-transform: uppercase; border-bottom: 1px solid #000; padding-bottom: 5px; margin-bottom: 15px; }
-    .article { margin: 15px 0; text-align: justify; }
-    .article-title { font-weight: bold; margin-bottom: 5px; }
-    .signature-section { margin-top: 60px; display: flex; justify-content: space-between; }
-    .signature-box { width: 45%; }
-    .signature-line { border-top: 1px solid #000; margin-top: 60px; padding-top: 5px; text-align: center; }
+    @page { margin: 2cm; }
+    body { 
+      font-family: 'Times New Roman', Times, serif; 
+      font-size: 12pt;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 { 
+      text-align: center; 
+      font-size: 16pt;
+      margin: 20px 0;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+    h2 {
+      font-size: 13pt;
+      margin-top: 25px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    p { 
+      text-align: justify; 
+      margin: 10px 0;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .article {
+      margin: 20px 0;
+    }
+    ul {
+      margin: 10px 0;
+      padding-left: 40px;
+    }
+    li {
+      margin: 5px 0;
+    }
+    .signatures {
+      margin-top: 60px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .signature-box {
+      width: 30%;
+      text-align: center;
+    }
+    .signature-line {
+      border-top: 1px solid #000;
+      margin-top: 80px;
+      padding-top: 5px;
+    }
+    .page-break {
+      page-break-after: always;
+    }
+    .centered {
+      text-align: center;
+      font-weight: bold;
+      margin: 30px 0;
+    }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h1>Contrat de Bail d'Habitation</h1>
-    <p><strong>KENGE 14 - Gestion Locative</strong></p>
-    <p>République Démocratique du Congo</p>
-  </div>
 
-  <div class="section">
-    <h2>Article 1 - Les Parties</h2>
-    <div class="article">
-      <p><strong>Entre le bailleur :</strong></p>
-      <p>KENGE 14, propriétaire de l'immeuble situé à Kinshasa, Congo</p>
-      <p style="margin-top:15px;"><strong>Et le locataire :</strong></p>
-      <p>${locataire.nom}</p>
-      <p>Téléphone : ${locataire.telephone}</p>
+<div class="header">
+  <h1>CONTRAT DE BAIL À USAGE D'HABITATION</h1>
+</div>
+
+<p><strong>Entre les soussignés :</strong></p>
+
+<p style="margin-left: 20px;">
+<strong>M. Cesar OKOMA</strong>, demeurant au n° 15, Avenue de la Science, Commune de la Gombe, Ville de Kinshasa,<br>
+ci-après dénommé <strong>« le Bailleur »</strong>, d'une part ;
+</p>
+
+<p><strong>Et</strong></p>
+
+<p style="margin-left: 20px;">
+<strong>${nomsLocataire}</strong>, demeurant ${adresseLocataire},<br>
+ci-après dénommé${nomsLocataire.includes('Mme') || nomsLocataire.includes('Madame') ? 'e' : ''} <strong>« le Preneur »</strong>, d'autre part ;
+</p>
+
+<p><strong>Il a été convenu et arrêté ce qui suit :</strong></p>
+
+<div class="article">
+  <h2>Article 1 – Objet du bail</h2>
+  <p>Le Bailleur donne en location au Preneur, qui accepte, l'immeuble sis au <strong>n° 14, Avenue Kenge, Quartier Mama Yemo, Commune de Ngaliema, Ville de Kinshasa</strong>, composé comme suit :</p>
+  <p style="margin-left: 20px; white-space: pre-line;">${descriptionAppt}</p>
+  <p>Le Preneur reconnaît prendre les lieux loués dans l'état où ils se trouvent et s'engage à n'en changer la destination qu'avec l'accord préalable et écrit du Bailleur.</p>
+</div>
+
+<div class="article">
+  <h2>Article 2 – Destination et occupation des lieux</h2>
+  <p>Le logement est exclusivement destiné à l'habitation du Preneur et des personnes expressément mentionnées au présent contrat.</p>
+  <p>Le nombre maximum d'occupants est fixé à <strong>${nombreEnTexte(occupants)} (${occupants}) personnes</strong>.</p>
+  <p>Toute occupation par un nombre supérieur constitue un manquement grave aux obligations contractuelles et pourra entraîner la résiliation du bail conformément à la législation en vigueur.</p>
+  <p>Le Preneur s'engage à informer le Bailleur de tout changement dans la composition du foyer.</p>
+</div>
+
+<div class="article">
+  <h2>Article 3 – Loyer et charges</h2>
+  <p>Le présent bail est consenti et accepté moyennant le paiement d'un loyer mensuel de <strong>${loyerLettres} dollars américains (USD ${loyer})</strong>, payable à la fin de chaque mois consommé.</p>
+  <p>À la demande écrite et préalable du Preneur, une période de grâce de cinq (5) jours pourra être exceptionnellement accordée.</p>
+  <p>Les charges locatives, notamment celles relatives à la consommation d'eau (Regideso) et d'électricité (Snel), sont à la charge exclusive du Preneur.</p>
+</div>
+
+<div class="article">
+  <h2>Article 4 – Modalités de paiement</h2>
+  <p>Le paiement du loyer s'effectuera par dépôt sur le compte bancaire <strong>EquityBCDC n° 233200011755382</strong>.</p>
+  <p>En cas d'impossibilité pour le Preneur d'effectuer lui-même le dépôt, le gérant pourra s'en charger moyennant une indemnité forfaitaire de cinq dollars américains (USD 5,00) pour frais de transport et de service.</p>
+  <p>Le Preneur devra transmettre le bordereau du dépôt au Bailleur via WhatsApp au numéro <strong>+1 817 353 8862</strong>, en précisant son nom ainsi que le mois concerné.</p>
+  <p>Le non-respect de cette procédure ou le défaut de paiement à l'échéance constituera un cas d'insolvabilité du Preneur.</p>
+</div>
+
+<div class="article">
+  <h2>Article 5 – Garantie locative</h2>
+  <p>À la signature du présent bail, le Preneur verse au Bailleur la somme de <strong>${garantieLettres} dollars américains (USD ${garantie})</strong> à titre de garantie locative.</p>
+  <p>Cette somme ne portera pas intérêt et sera restituée au Preneur à la fin du contrat, après déduction des éventuelles sommes dues au Bailleur, notamment au titre de réparations ou de remise en état des lieux.</p>
+</div>
+
+<div class="article">
+  <h2>Article 6 – Obligations du Preneur</h2>
+  <p>Le Preneur s'engage à entretenir les lieux loués et à les restituer, à l'expiration du bail, dans l'état constaté lors de l'entrée en jouissance, sauf usure normale.</p>
+  <p>Il prendra en charge:</p>
+  <ul>
+    <li>La réparation de tout dégât imputable à sa responsabilité,</li>
+    <li>Le remplacement de tout vitrage brisé ou endommagé de son fait,</li>
+    <li>Les grosses réparations résultant de sa négligence ou de sa faute.</li>
+  </ul>
+</div>
+
+<div class="article">
+  <h2>Article 7 – Obligations du Bailleur</h2>
+  <p>Le Bailleur prendra à sa charge les grosses réparations qui ne sont pas imputables au Preneur.</p>
+  <p>Toute modification ou réparation envisagée par le Preneur devra faire l'objet d'un accord préalable et écrit du Bailleur.</p>
+</div>
+
+<div class="article">
+  <h2>Article 8 – Durée du bail</h2>
+  <p>Le présent contrat est conclu pour une durée de <strong>${nombreEnTexte(duree)} (${duree}) ${duree > 1 ? 'années' : 'année'}</strong>, prenant effet le <strong>${debutFormate}</strong>, et renouvelable par tacite reconduction, sauf dénonciation ou résiliation dans les conditions prévues au présent contrat.</p>
+</div>
+
+<div class="article">
+  <h2>Article 9 – Droit de visite en fin de bail</h2>
+  <p>Durant les deux (2) mois précédant l'échéance du présent contrat, le Bailleur pourra organiser des visites de la parcelle au profit de candidats Preneurs, à raison de deux jours par semaine, à convenir avec le Preneur.</p>
+  <p>Cette disposition ne s'applique pas si le Preneur notifie, par écrit et dans les délais, sa volonté de renouveler le bail.</p>
+</div>
+
+<div class="article">
+  <h2>Article 10 – Interdiction de sous-location et cession du bail</h2>
+  <p>Le Preneur s'interdit formellement de sous-louer tout ou partie du bien loué, sous quelque prétexte que ce soit.</p>
+  <p>Toute cession ou transfert du présent bail est soumis à l'autorisation préalable et écrite du Bailleur.</p>
+</div>
+
+<div class="article">
+  <h2>Article 11 – État des lieux</h2>
+  <p>Un état des lieux contradictoire sera dressé entre les parties lors de l'entrée en jouissance et à la fin du contrat.</p>
+</div>
+
+<div class="article">
+  <h2>Article 12 – Résiliation</h2>
+  <p>Chacune des parties pourra résilier le présent bail à tout moment, sans motif particulier, moyennant un préavis de quatre-vingt-dix (90) jours, notifié par écrit à l'autre partie, avec accusé de réception.</p>
+  <p>Le délai de préavis court à compter de la date de réception de la notification.</p>
+</div>
+
+${clauses ? `
+<div class="article">
+  <h2>Article 13 – Clauses spéciales additionnelles</h2>
+  <p style="white-space: pre-line;">${clauses}</p>
+</div>
+` : ''}
+
+<div class="article">
+  <h2>Article ${clauses ? '14' : '13'} – Règlement des litiges</h2>
+  <p>Tout différend relatif à l'interprétation ou à l'exécution du présent contrat sera, dans un premier temps, réglé à l'amiable entre les parties.</p>
+  <p>En cas d'échec, le litige sera soumis à la compétence des juridictions compétentes de la République Démocratique du Congo.</p>
+</div>
+
+<p class="centered">Fait à Kinshasa, le ${aujourdhui}.</p>
+
+<div class="signatures">
+  <div class="signature-box">
+    <p><strong>Le Bailleur</strong></p>
+    <div class="signature-line">
+      Cesar OKOMA
     </div>
   </div>
-
-  <div class="section">
-    <h2>Article 2 - Objet du Contrat</h2>
-    <div class="article">
-      <p>Le bailleur loue au locataire l'appartement désigné comme suit :</p>
-      <p><strong>Appartement ${appartement.nom}</strong></p>
-      <p>Type de bail : <strong>${type === 'habitation' ? 'Habitation' : 'Commercial'}</strong></p>
+  
+  <div class="signature-box">
+    <p><strong>Le Preneur</strong></p>
+    <div class="signature-line">
+      ${nomsLocataire}
     </div>
   </div>
-
-  <div class="section">
-    <h2>Article 3 - Durée du Bail</h2>
-    <div class="article">
-      <p>Le présent bail est conclu pour une durée déterminée :</p>
-      <p><strong>Du ${debutFormate} au ${finFormate}</strong></p>
-      <p>À l'expiration de cette période, le bail pourra être renouvelé par accord mutuel des parties.</p>
+  
+  <div class="signature-box">
+    <p><strong>Témoin</strong></p>
+    <div class="signature-line">
+      
     </div>
   </div>
+</div>
 
-  <div class="section">
-    <h2>Article 4 - Loyer et Charges</h2>
-    <div class="article">
-      <p>Le loyer mensuel est fixé à <strong>${appartement.loyer} ${devise}</strong></p>
-      <p>Le loyer est payable mensuellement, à terme échu, conformément aux règles congolaises :</p>
-      <ul>
-        <li>Le loyer du mois de consommation est dû à la fin de ce mois</li>
-        <li>Un délai de grâce de 5 jours est accordé</li>
-        <li>Exemple : Le loyer d'avril est dû au plus tard le 5 mai</li>
-      </ul>
-      <p>Garantie (caution) : <strong>${locataire.garantie || appartement.loyer * 2} ${devise}</strong></p>
-    </div>
-  </div>
-
-  <div class="section">
-    <h2>Article 5 - Obligations du Locataire</h2>
-    <div class="article">
-      <p>Le locataire s'engage à :</p>
-      <ul>
-        <li>Payer le loyer aux échéances convenues</li>
-        <li>User des lieux loués paisiblement et en bon père de famille</li>
-        <li>Entretenir les lieux en bon état</li>
-        <li>Ne pas sous-louer sans autorisation écrite du bailleur</li>
-        <li>Respecter le règlement intérieur de l'immeuble</li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="section">
-    <h2>Article 6 - Obligations du Bailleur</h2>
-    <div class="article">
-      <p>Le bailleur s'engage à :</p>
-      <ul>
-        <li>Délivrer au locataire les lieux loués en bon état</li>
-        <li>Assurer la jouissance paisible des lieux</li>
-        <li>Effectuer les réparations nécessaires à la conservation des lieux</li>
-      </ul>
-    </div>
-  </div>
-
-  ${clauses ? `
-  <div class="section">
-    <h2>Article 7 - Clauses Spéciales</h2>
-    <div class="article">
-      <p>${clauses.replace(/\n/g, '</p><p>')}</p>
-    </div>
-  </div>
-  ` : ''}
-
-  <div class="section">
-    <h2>Article ${clauses ? '8' : '7'} - Résiliation</h2>
-    <div class="article">
-      <p>Le présent bail peut être résilié :</p>
-      <ul>
-        <li>Par accord mutuel des parties</li>
-        <li>Pour non-paiement du loyer après mise en demeure restée sans effet</li>
-        <li>Pour non-respect des obligations contractuelles</li>
-      </ul>
-      <p>Un préavis de 3 mois est requis pour toute résiliation anticipée.</p>
-    </div>
-  </div>
-
-  <p style="margin-top:40px;text-align:center;"><strong>Fait à Kinshasa, le ${new Date().toLocaleDateString('fr-FR')}</strong></p>
-
-  <div class="signature-section">
-    <div class="signature-box">
-      <p><strong>Le Bailleur</strong></p>
-      <p>KENGE 14</p>
-      <div class="signature-line">Signature</div>
-    </div>
-    <div class="signature-box">
-      <p><strong>Le Locataire</strong></p>
-      <p>${locataire.nom}</p>
-      <div class="signature-line">Signature</div>
-    </div>
-  </div>
 </body>
 </html>`;
 
@@ -1149,11 +1366,52 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `Contrat_Bail_${appartement.nom}_${locataire.nom.replace(/ /g, '_')}.html`;
+      a.download = `Contrat_de_Bail_${nomsLocataire.replace(/ /g, '_').replace(/\./g, '')}.html`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+      
+      alert('Contrat généré avec succès! Le fichier a été téléchargé.');
+    }
+
+    // Fonction pour convertir nombres en lettres (simplifiée)
+    function nombreEnLettres(n) {
+      const unites = ['', 'un', 'deux', 'trois', 'quatre', 'cinq', 'six', 'sept', 'huit', 'neuf'];
+      const dizaines = ['', 'dix', 'vingt', 'trente', 'quarante', 'cinquante', 'soixante', 'soixante-dix', 'quatre-vingt', 'quatre-vingt-dix'];
+      const teens = ['dix', 'onze', 'douze', 'treize', 'quatorze', 'quinze', 'seize', 'dix-sept', 'dix-huit', 'dix-neuf'];
+      
+      if (n === 0) return 'zéro';
+      if (n < 10) return unites[n];
+      if (n >= 10 && n < 20) return teens[n - 10];
+      if (n >= 20 && n < 100) {
+        const diz = Math.floor(n / 10);
+        const un = n % 10;
+        if (un === 0) return dizaines[diz];
+        if (un === 1 && diz !== 8) return dizaines[diz] + ' et un';
+        return dizaines[diz] + '-' + unites[un];
+      }
+      if (n >= 100 && n < 1000) {
+        const cent = Math.floor(n / 100);
+        const reste = n % 100;
+        let result = cent === 1 ? 'cent' : unites[cent] + ' cent';
+        if (reste > 0) result += ' ' + nombreEnLettres(reste);
+        return result;
+      }
+      if (n >= 1000) {
+        const mille = Math.floor(n / 1000);
+        const reste = n % 1000;
+        let result = mille === 1 ? 'mille' : nombreEnLettres(mille) + ' mille';
+        if (reste > 0) result += ' ' + nombreEnLettres(reste);
+        return result;
+      }
+      return n.toString();
+    }
+    
+    // Fonction pour convertir nombres en texte (un, deux, trois...)
+    function nombreEnTexte(n) {
+      const textes = ['zéro', 'un', 'deux', 'trois', 'quatre', 'cinq', 'six', 'sept', 'huit', 'neuf', 'dix'];
+      return textes[n] || n.toString();
     }
 
     function afficherContratsGeneres() {
