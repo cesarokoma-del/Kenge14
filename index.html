@@ -546,27 +546,6 @@
       afficherTout();
     }
 
-    // Navigation
-    function showTab(tabName) {
-      document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
-      document.querySelectorAll('.tab-btn').forEach(b => {
-        b.classList.remove('border-emerald-600', 'bg-emerald-50', 'text-emerald-700');
-        b.classList.add('border-transparent', 'text-gray-600');
-      });
-      
-      document.getElementById(tabName + '-tab').classList.remove('hidden');
-      
-      // Trouver et activer le bon bouton
-      const buttons = document.querySelectorAll('.tab-btn');
-      buttons.forEach((btn, index) => {
-        const tabs = ['dashboard', 'appartements', 'locataires', 'paiements'];
-        if (tabs[index] === tabName) {
-          btn.classList.add('border-emerald-600', 'bg-emerald-50', 'text-emerald-700');
-          btn.classList.remove('border-transparent', 'text-gray-600');
-        }
-      });
-    }
-
     // Modals
     function ouvrirModal(id) {
       document.getElementById(id).classList.add('active');
