@@ -1442,19 +1442,31 @@ ${clauses ? `
 </body>
 </html>`;
 
-      // Créer un élément temporaire pour le contenu
+      // Extraire le contenu du body du HTML complet
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(contratHTML, 'text/html');
+      const bodyContent = doc.body.innerHTML;
+      const styles = doc.querySelector('style').innerHTML;
+      
+      // Créer un élément temporaire avec le contenu et les styles
       const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = contratHTML;
+      tempDiv.innerHTML = `
+        <style>${styles}</style>
+        ${bodyContent}
+      `;
       tempDiv.style.position = 'absolute';
       tempDiv.style.left = '-9999px';
+      tempDiv.style.width = '210mm'; // A4 width
+      tempDiv.style.padding = '20px';
+      tempDiv.style.backgroundColor = 'white';
       document.body.appendChild(tempDiv);
       
       // Options pour html2pdf
       const opt = {
-        margin: [15, 15, 15, 15],
+        margin: [10, 10, 10, 10],
         filename: `Contrat_de_Bail_${nomsLocataire.replace(/ /g, '_').replace(/\./g, '')}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
+        html2canvas: { scale: 2, useCORS: true, letterRendering: true },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
       
@@ -1462,6 +1474,10 @@ ${clauses ? `
       html2pdf().set(opt).from(tempDiv).save().then(() => {
         document.body.removeChild(tempDiv);
         alert('Contrat PDF généré avec succès! Le fichier a été téléchargé.\n\nVous pouvez maintenant l\'envoyer sur WhatsApp.');
+      }).catch(err => {
+        console.error('Erreur lors de la génération du PDF:', err);
+        document.body.removeChild(tempDiv);
+        alert('Erreur lors de la génération du PDF. Veuillez réessayer.');
       });
     }
 
