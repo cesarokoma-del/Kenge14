@@ -193,17 +193,27 @@
         <p class="text-gray-600 mb-6">Remplissez les informations pour générer le contrat professionnel</p>
         
         <form id="formContrat" class="space-y-6">
+          <!-- Section Appartement -->
+          <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-200">
+            <h4 class="font-bold text-gray-800 mb-3">🏠 Sélection de l'Appartement</h4>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Appartement *</label>
+              <select id="contratAppartement" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+                <option value="">Choisir un appartement...</option>
+                <option value="APT-3RZ">APT-3RZ (3 Chambres, 2 Salles de bain, Salon, Salle à manger, Cuisine, Magasin)</option>
+                <option value="APT-1CAV">APT-1CAV (1 Chambre, Salon, Cuisine, douche-toilette externe)</option>
+                <option value="APT-2A">APT-2A (2 Chambres, 2 Salles de bain, Salon, Cuisine)</option>
+                <option value="APT-2B">APT-2B (2 Chambres, 2 Salles de bain, Salon, Cuisine)</option>
+                <option value="APT-1ER">APT-1ER (Studio + douche-toilette externe)</option>
+              </select>
+            </div>
+          </div>
+
           <!-- Section Locataire -->
           <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
             <h4 class="font-bold text-gray-800 mb-3">👤 Informations du Locataire</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Locataire</label>
-                <select id="contratLocataire" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
-                  <option value="">Choisir un locataire...</option>
-                </select>
-              </div>
-              <div>
+              <div class="md:col-span-2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Noms complets du locataire *</label>
                 <input type="text" id="contratNomsLocataire" required placeholder="Ex: Mme Ndimina KYEMBE Adel" class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
               </div>
@@ -214,26 +224,26 @@
             </div>
           </div>
 
-          <!-- Section Appartement -->
-          <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-200">
-            <h4 class="font-bold text-gray-800 mb-3">🏠 Description de l'Appartement</h4>
+          <!-- Section Description Appartement (Auto-remplie) -->
+          <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+            <h4 class="font-bold text-gray-800 mb-3">📋 Description de l'Appartement (Auto-remplie)</h4>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Nombre de chambres *</label>
-                <input type="number" id="contratChambres" value="3" min="1" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Nombre de chambres</label>
+                <input type="number" id="contratChambres" value="3" min="0" readonly class="w-full border-2 border-gray-300 rounded-lg px-4 py-2 bg-gray-100">
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Salons</label>
-                <input type="number" id="contratSalons" value="1" min="0" class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+                <input type="number" id="contratSalons" value="1" min="0" readonly class="w-full border-2 border-gray-300 rounded-lg px-4 py-2 bg-gray-100">
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Salles de bain *</label>
-                <input type="number" id="contratSallesBain" value="2" min="1" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Salles de bain</label>
+                <input type="number" id="contratSallesBain" value="2" min="0" readonly class="w-full border-2 border-gray-300 rounded-lg px-4 py-2 bg-gray-100">
               </div>
             </div>
             <div class="mt-4">
-              <label class="block text-sm font-medium text-gray-700 mb-2">Autres éléments (salle à manger, cuisine, etc.)</label>
-              <textarea id="contratAutresElements" rows="2" class="w-full border-2 border-gray-300 rounded-lg px-4 py-2" placeholder="Ex: une salle à manger, une cuisine, un garde-manger">une salle à manger, une cuisine, un garde-manger</textarea>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Autres éléments</label>
+              <textarea id="contratAutresElements" rows="2" readonly class="w-full border-2 border-gray-300 rounded-lg px-4 py-2 bg-gray-100" placeholder="Sélectionnez un appartement..."></textarea>
             </div>
             <div class="mt-4">
               <label class="block text-sm font-medium text-gray-700 mb-2">Nombre maximum d'occupants</label>
@@ -246,7 +256,7 @@
             <h4 class="font-bold text-gray-800 mb-3">💰 Informations Financières</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Loyer mensuel *</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Loyer mensuel (USD) *</label>
                 <input type="number" id="contratLoyer" step="0.01" required readonly class="w-full border-2 border-gray-300 rounded-lg px-4 py-2 bg-gray-100">
                 <p class="text-xs text-gray-500 mt-1">Automatique selon l'appartement</p>
               </div>
@@ -1038,17 +1048,79 @@
 
     // === GESTION DES CONTRATS ===
     
-    // Event listener pour remplir automatiquement les infos quand on sélectionne un locataire
-    document.getElementById('contratLocataire').onchange = function() {
-      const locId = this.value;
-      if (!locId) return;
+    // Définition des appartements avec leurs caractéristiques
+    const appartementsInfo = {
+      'APT-3RZ': {
+        nom: 'APT-3RZ',
+        chambres: 3,
+        salons: 1,
+        sallesBain: 2,
+        autresElements: 'une salle à manger, une cuisine, un magasin',
+        occupants: 8,
+        loyer: 400
+      },
+      'APT-1CAV': {
+        nom: 'APT-1CAV',
+        chambres: 1,
+        salons: 1,
+        sallesBain: 0,
+        autresElements: 'une cuisine, une douche-toilette externe',
+        occupants: 4,
+        loyer: 150
+      },
+      'APT-2A': {
+        nom: 'APT-2A',
+        chambres: 2,
+        salons: 1,
+        sallesBain: 2,
+        autresElements: 'une cuisine',
+        occupants: 6,
+        loyer: 400
+      },
+      'APT-2B': {
+        nom: 'APT-2B',
+        chambres: 2,
+        salons: 1,
+        sallesBain: 2,
+        autresElements: 'une cuisine',
+        occupants: 6,
+        loyer: 400
+      },
+      'APT-1ER': {
+        nom: 'APT-1ER',
+        chambres: 0,
+        salons: 0,
+        sallesBain: 0,
+        autresElements: 'un studio avec douche-toilette externe',
+        occupants: 2,
+        loyer: 400
+      }
+    };
+    
+    // Event listener pour remplir automatiquement les infos quand on sélectionne un appartement
+    document.getElementById('contratAppartement').onchange = function() {
+      const apptNom = this.value;
+      if (!apptNom) {
+        // Réinitialiser les champs
+        document.getElementById('contratChambres').value = '';
+        document.getElementById('contratSalons').value = '';
+        document.getElementById('contratSallesBain').value = '';
+        document.getElementById('contratAutresElements').value = '';
+        document.getElementById('contratOccupants').value = '';
+        document.getElementById('contratLoyer').value = '';
+        document.getElementById('contratGarantie').value = '';
+        return;
+      }
       
-      const loc = locataires.find(l => l.id === locId);
-      const appt = appartements.find(a => a.id === loc.appartementId);
-      
-      if (loc && appt) {
-        document.getElementById('contratLoyer').value = appt.loyer;
-        document.getElementById('contratGarantie').value = appt.loyer * 4; // 4 mois de garantie
+      const apptInfo = appartementsInfo[apptNom];
+      if (apptInfo) {
+        document.getElementById('contratChambres').value = apptInfo.chambres;
+        document.getElementById('contratSalons').value = apptInfo.salons;
+        document.getElementById('contratSallesBain').value = apptInfo.sallesBain;
+        document.getElementById('contratAutresElements').value = apptInfo.autresElements;
+        document.getElementById('contratOccupants').value = apptInfo.occupants;
+        document.getElementById('contratLoyer').value = apptInfo.loyer;
+        document.getElementById('contratGarantie').value = apptInfo.loyer * 4; // 4 mois de garantie
       }
     };
     
@@ -1076,9 +1148,8 @@
     document.getElementById('formContrat').onsubmit = (e) => {
       e.preventDefault();
       
-      const locId = document.getElementById('contratLocataire').value;
-      const loc = locataires.find(l => l.id === locId);
-      const appt = appartements.find(a => a.id === loc.appartementId);
+      const apptNom = document.getElementById('contratAppartement').value;
+      const apptInfo = appartementsInfo[apptNom];
       
       const nomsLocataire = document.getElementById('contratNomsLocataire').value;
       const adresseLocataire = document.getElementById('contratAdresseLocataire').value;
@@ -1095,8 +1166,7 @@
       const clauses = document.getElementById('contratClauses').value;
       
       genererContratProfessionnel({
-        locataire: loc,
-        appartement: appt,
+        appartementNom: apptNom,
         nomsLocataire,
         adresseLocataire,
         dateDebut,
@@ -1115,6 +1185,20 @@
       // Sauvegarder dans l'historique
       const contrat = {
         id: Date.now().toString(),
+        appartementNom: apptNom,
+        nomsLocataire,
+        dateDebut,
+        dateFin,
+        dateCreation: new Date().toISOString()
+      };
+      contrats.push(contrat);
+      sauvegarder();
+      afficherContratsGeneres();
+    };
+      
+      // Sauvegarder dans l'historique
+      const contrat = {
+        id: Date.now().toString(),
         locataireId: locId,
         appartementId: appt.id,
         nomsLocataire,
@@ -1129,7 +1213,7 @@
 
     function genererContratProfessionnel(data) {
       const {
-        locataire, appartement, nomsLocataire, adresseLocataire,
+        appartementNom, nomsLocataire, adresseLocataire,
         dateDebut, dateFin, chambres, salons, sallesBain, autresElements,
         occupants, loyer, garantie, duree, clauses
       } = data;
@@ -1418,17 +1502,15 @@ ${clauses ? `
       const html = contrats
         .sort((a, b) => new Date(b.dateCreation) - new Date(a.dateCreation))
         .map(c => {
-          const loc = locataires.find(l => l.id === c.locataireId);
-          const appt = appartements.find(a => a.id === c.appartementId);
           return `
             <div class="flex items-center justify-between p-4 bg-emerald-50 rounded-lg border border-emerald-200">
               <div>
-                <p class="font-semibold text-gray-800">${loc?.nom || ''} - ${appt?.nom || ''}</p>
+                <p class="font-semibold text-gray-800">${c.nomsLocataire || 'Locataire'} - ${c.appartementNom || 'Appartement'}</p>
                 <p class="text-sm text-gray-600">Du ${new Date(c.dateDebut).toLocaleDateString('fr-FR')} au ${new Date(c.dateFin).toLocaleDateString('fr-FR')}</p>
                 <p class="text-xs text-gray-500">Créé le ${new Date(c.dateCreation).toLocaleDateString('fr-FR')}</p>
               </div>
               <div>
-                <span class="px-3 py-1 bg-emerald-600 text-white rounded-full text-sm">${c.type}</span>
+                <span class="px-3 py-1 bg-emerald-600 text-white rounded-full text-sm">Habitation</span>
               </div>
             </div>
           `;
@@ -1571,14 +1653,6 @@ ${clauses ? `
       });
       this.classList.add('border-emerald-600', 'bg-emerald-50', 'text-emerald-700');
       this.classList.remove('border-transparent', 'text-gray-600');
-      
-      // Remplir le select des locataires pour les contrats
-      const select = document.getElementById('contratLocataire');
-      select.innerHTML = '<option value="">Choisir un locataire...</option>' + 
-        locataires.map(l => {
-          const appt = appartements.find(a => a.id === l.appartementId);
-          return `<option value="${l.id}">${l.nom} - ${appt?.nom || ''}</option>`;
-        }).join('');
     };
 
     // Initialiser
