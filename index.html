@@ -4,23 +4,830 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KENGE 14 - Gestion Locative</title>
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .modal { display: none; }
+    .modal.active { display: flex; }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50">
+  
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-emerald-800 to-teal-700 text-white shadow-xl">
+    <div class="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <div class="w-10 h-10">🏢</div>
+        <div>
+          <h1 class="text-3xl font-bold">KENGE 14</h1>
+          <p class="text-emerald-100 text-sm">Gestion Locative - Congo</p>
+        </div>
+      </div>
+      <select id="deviseSelect" class="bg-white/20 border border-white/30 rounded-lg px-4 py-2 text-white backdrop-blur-sm">
+        <option value="USD">USD $</option>
+        <option value="CDF">CDF FC</option>
+        <option value="EUR">EUR €</option>
+      </select>
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  <nav class="bg-white shadow-md border-b border-emerald-100">
+    <div class="max-w-7xl mx-auto px-6 flex gap-1">
+      <button id="nav-dashboard" class="tab-btn px-6 py-4 font-medium border-b-4 border-emerald-600 bg-emerald-50 text-emerald-700">
+        🏠 Tableau de bord
+      </button>
+      <button id="nav-appartements" class="tab-btn px-6 py-4 font-medium border-b-4 border-transparent text-gray-600 hover:text-emerald-600">
+        🏢 Appartements
+      </button>
+      <button id="nav-locataires" class="tab-btn px-6 py-4 font-medium border-b-4 border-transparent text-gray-600 hover:text-emerald-600">
+        👥 Suivi Locataires
+      </button>
+      <button id="nav-paiements" class="tab-btn px-6 py-4 font-medium border-b-4 border-transparent text-gray-600 hover:text-emerald-600">
+        💰 Paiements
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-6 py-8">
+    
+    <!-- Dashboard Tab -->
+    <div id="dashboard-tab" style="display:block;">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        <div class="bg-white rounded-2xl shadow-lg p-6 border-2 border-emerald-100">
+          <div class="text-gray-600 text-sm font-medium mb-1">Total Appartements</div>
+          <p class="text-3xl font-bold text-gray-800" id="totalAppts">5</p>
+        </div>
+        <div class="bg-white rounded-2xl shadow-lg p-6 border-2 border-emerald-100">
+          <div class="text-gray-600 text-sm font-medium mb-1">Appartements Loués</div>
+          <p class="text-3xl font-bold text-gray-800" id="loues">4</p>
+          <p class="text-sm text-gray-500 mt-1" id="vacants">1 vacant(s)</p>
+        </div>
+        <div class="bg-white rounded-2xl shadow-lg p-6 border-2 border-emerald-100">
+          <div class="text-gray-600 text-sm font-medium mb-1">Revenu Mensuel</div>
+          <p class="text-3xl font-bold text-gray-800" id="revenuTotal">1600 USD</p>
+        </div>
+        <div class="bg-white rounded-2xl shadow-lg p-6 border-2 border-red-100">
+          <div class="text-gray-600 text-sm font-medium mb-1">Loyers en Retard</div>
+          <p class="text-3xl font-bold text-red-600" id="enRetard">0</p>
+          <p class="text-sm text-gray-500 mt-1">Après le 5 du mois</p>
+        </div>
+      </div>
+      
+      <div class="bg-white rounded-2xl shadow-lg p-6 border border-emerald-100">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">📅 Paiements Récents</h2>
+        <div id="paiementsRecents"></div>
+      </div>
+    </div>
+
+    <!-- Appartements Tab -->
+    <div id="appartements-tab" style="display:none;">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-3xl font-bold text-gray-800">Appartements</h2>
+        <button onclick="ajouterAppartement()" class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg">
+          ➕ Ajouter
+        </button>
+      </div>
+      <div id="appartementsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </div>
+
+    <!-- Locataires Tab - NOUVEAU DESIGN -->
+    <div id="locataires-tab" style="display:none;">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-3xl font-bold text-gray-800">Suivi Mensuel des Locataires</h2>
+        <button onclick="ajouterLocataire()" class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg">
+          ➕ Ajouter
+        </button>
+      </div>
+      <div id="locatairesList" class="space-y-6"></div>
+    </div>
+
+    <!-- Paiements Tab -->
+    <div id="paiements-tab" style="display:none;">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-3xl font-bold text-gray-800">Gestion des Paiements</h2>
+        <button onclick="ajouterPaiement()" class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg">
+          ➕ Enregistrer un paiement
+        </button>
+      </div>
+      <div class="bg-white rounded-2xl shadow-lg border border-emerald-100 overflow-hidden">
+        <table class="w-full">
+          <thead class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
+            <tr>
+              <th class="text-left px-6 py-4">Date</th>
+              <th class="text-left px-6 py-4">Locataire</th>
+              <th class="text-left px-6 py-4">Appartement</th>
+              <th class="text-left px-6 py-4">Mois concerné</th>
+              <th class="text-left px-6 py-4">Montant</th>
+              <th class="text-left px-6 py-4">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="paiementsList"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Modals (identiques à la version précédente) -->
+  <div id="modalAppartement" class="modal fixed inset-0 bg-black/50 backdrop-blur-sm items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full">
+      <div class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-4 flex items-center justify-between rounded-t-2xl">
+        <h2 class="text-2xl font-bold" id="modalApptTitle">Modifier l'appartement</h2>
+        <button onclick="fermerModal('modalAppartement')" class="text-2xl">✕</button>
+      </div>
+      <form id="formAppartement" class="p-6 space-y-4">
+        <input type="hidden" id="apptId">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Nom de l'appartement</label>
+          <input type="text" id="apptNom" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Loyer mensuel</label>
+          <input type="number" id="apptLoyer" step="0.01" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Statut</label>
+          <select id="apptStatut" class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+            <option value="loue">Loué</option>
+            <option value="vacant">Vacant</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Locataire actuel (optionnel)</label>
+          <select id="apptLocataire" class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+            <option value="">Aucun locataire</option>
+          </select>
+        </div>
+        <div class="flex gap-3 mt-6">
+          <button type="button" onclick="fermerModal('modalAppartement')" class="flex-1 bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-semibold">Annuler</button>
+          <button type="submit" class="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-lg font-semibold">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="modalLocataire" class="modal fixed inset-0 bg-black/50 backdrop-blur-sm items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full">
+      <div class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-4 flex items-center justify-between rounded-t-2xl">
+        <h2 class="text-2xl font-bold" id="modalLocTitle">Modifier le locataire</h2>
+        <button onclick="fermerModal('modalLocataire')" class="text-2xl">✕</button>
+      </div>
+      <form id="formLocataire" class="p-6 space-y-4">
+        <input type="hidden" id="locId">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Nom complet</label>
+          <input type="text" id="locNom" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Téléphone</label>
+          <input type="tel" id="locTelephone" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Appartement</label>
+          <select id="locAppartement" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2"></select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Date d'entrée</label>
+          <input type="date" id="locDateEntree" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+        </div>
+        <div class="flex gap-3 mt-6">
+          <button type="button" onclick="fermerModal('modalLocataire')" class="flex-1 bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-semibold">Annuler</button>
+          <button type="submit" class="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-lg font-semibold">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="modalPaiement" class="modal fixed inset-0 bg-black/50 backdrop-blur-sm items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full">
+      <div class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-4 flex items-center justify-between rounded-t-2xl">
+        <h2 class="text-2xl font-bold">Enregistrer un paiement</h2>
+        <button onclick="fermerModal('modalPaiement')" class="text-2xl">✕</button>
+      </div>
+      <form id="formPaiement" class="p-6 space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Locataire</label>
+          <select id="paiLocataire" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2"></select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Mois concerné (mois de consommation)</label>
+          <input type="month" id="paiMois" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Montant</label>
+          <input type="number" id="paiMontant" step="0.01" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Date de paiement</label>
+          <input type="date" id="paiDate" required class="w-full border-2 border-gray-300 rounded-lg px-4 py-2">
+        </div>
+        <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-200">
+          <p class="text-sm text-emerald-800">
+            ℹ️ <strong>Règle Congo :</strong> Le loyer est dû à la fin du mois de consommation + 5 jours de grâce.
+            <br>Ex: Loyer d'avril 2026 dû au plus tard le 5 mai 2026.
+          </p>
+        </div>
+        <div class="flex gap-3 mt-6">
+          <button type="button" onclick="fermerModal('modalPaiement')" class="flex-1 bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-semibold">Annuler</button>
+          <button type="submit" class="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-lg font-semibold">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Données initiales
+    let appartements = JSON.parse(localStorage.getItem('appartements')) || [
+      { id: '1', nom: 'APT-3RZ', loyer: 400, statut: 'loue', locataireId: '1' },
+      { id: '2', nom: 'APT-1CAV', loyer: 400, statut: 'loue', locataireId: '2' },
+      { id: '3', nom: 'APT-2A', loyer: 400, statut: 'loue', locataireId: '3' },
+      { id: '4', nom: 'APT-2B', loyer: 400, statut: 'loue', locataireId: '4' },
+      { id: '5', nom: 'APT-1ER', loyer: 400, statut: 'vacant', locataireId: null }
+    ];
+
+    let locataires = JSON.parse(localStorage.getItem('locataires')) || [
+      { id: '1', nom: 'Mme Adel Ndimina', telephone: '0816 562 277', appartementId: '1', dateEntree: '2024-01-01' },
+      { id: '2', nom: 'M. Arnold Misiansu', telephone: '0822 842 682', appartementId: '2', dateEntree: '2024-01-01' },
+      { id: '3', nom: 'M. Daddy Yaya Buta', telephone: '0816 663 371', appartementId: '3', dateEntree: '2024-01-01' },
+      { id: '4', nom: 'Mme Elisabeth Masinga', telephone: '0815 205 183', appartementId: '4', dateEntree: '2024-01-01' }
+    ];
+
+    let paiements = JSON.parse(localStorage.getItem('paiements')) || [];
+    let devise = localStorage.getItem('devise') || 'USD';
+
+    // Fonction pour calculer la date limite (fin du mois + 5 jours)
+    function getDateLimite(moisStr) {
+      // moisStr format: "2026-04" (avril 2026)
+      const [annee, mois] = moisStr.split('-').map(Number);
+      // Dernier jour du mois
+      const dernierJour = new Date(annee, mois, 0);
+      // + 5 jours de grâce
+      const dateLimite = new Date(dernierJour);
+      dateLimite.setDate(dateLimite.getDate() + 5);
+      return dateLimite;
+    }
+
+    // Fonction pour obtenir le statut d'un mois
+    function getStatutMois(locataireId, moisStr) {
+      const aujourdhui = new Date();
+      const dateLimite = getDateLimite(moisStr);
+      const paiement = paiements.find(p => p.locataireId === locataireId && p.mois === moisStr);
+      
+      if (paiement) {
+        return { statut: 'paye', date: paiement.date, montant: paiement.montant };
+      }
+      
+      if (aujourdhui > dateLimite) {
+        return { statut: 'retard', dateLimite: dateLimite };
+      }
+      
+      return { statut: 'avenir', dateLimite: dateLimite };
+    }
+
+    // Générer les 6 derniers mois
+    function getDerniersMois(nb = 6) {
+      const mois = [];
+      const aujourd'hui = new Date();
+      for (let i = nb - 1; i >= 0; i--) {
+        const d = new Date(aujourd'hui.getFullYear(), aujourd'hui.getMonth() - i, 1);
+        mois.push({
+          str: d.toISOString().slice(0, 7),
+          nom: d.toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' })
+        });
+      }
+      return mois;
+    }
+
+    // Sauvegarder
+    function sauvegarder() {
+      localStorage.setItem('appartements', JSON.stringify(appartements));
+      localStorage.setItem('locataires', JSON.stringify(locataires));
+      localStorage.setItem('paiements', JSON.stringify(paiements));
+      localStorage.setItem('devise', devise);
+      afficherTout();
+    }
+
+    // Navigation
+    function showTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('border-emerald-600', 'bg-emerald-50', 'text-emerald-700');
+        b.classList.add('border-transparent', 'text-gray-600');
+      });
+      
+      document.getElementById(tabName + '-tab').classList.remove('hidden');
+      
+      // Trouver et activer le bon bouton
+      const buttons = document.querySelectorAll('.tab-btn');
+      buttons.forEach((btn, index) => {
+        const tabs = ['dashboard', 'appartements', 'locataires', 'paiements'];
+        if (tabs[index] === tabName) {
+          btn.classList.add('border-emerald-600', 'bg-emerald-50', 'text-emerald-700');
+          btn.classList.remove('border-transparent', 'text-gray-600');
+        }
+      });
+    }
+
+    // Modals
+    function ouvrirModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+
+    function fermerModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    // Appartements (identique)
+    function afficherAppartements() {
+      const html = appartements.map(appt => {
+        const loc = locataires.find(l => l.id === appt.locataireId);
+        return `
+          <div class="bg-white rounded-2xl shadow-lg p-6 border-2 border-emerald-100">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <h3 class="text-2xl font-bold text-gray-800">${appt.nom}</h3>
+                <p class="text-emerald-600 font-semibold text-lg">${appt.loyer} ${devise}/mois</p>
+              </div>
+              <span class="px-4 py-1 rounded-full text-sm font-medium ${appt.statut === 'loue' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}">
+                ${appt.statut === 'loue' ? 'Loué' : 'Vacant'}
+              </span>
+            </div>
+            ${loc ? `
+              <div class="mt-4 pt-4 border-t border-gray-200">
+                <p class="text-sm text-gray-600">Locataire actuel</p>
+                <p class="font-semibold text-gray-800">${loc.nom}</p>
+                <p class="text-sm text-gray-600">${loc.telephone}</p>
+              </div>
+            ` : ''}
+            <button onclick="modifierAppartement('${appt.id}')" class="mt-4 w-full bg-emerald-100 text-emerald-700 px-4 py-2 rounded-lg font-medium hover:bg-emerald-200">
+              Modifier
+            </button>
+          </div>
+        `;
+      }).join('');
+      document.getElementById('appartementsList').innerHTML = html;
+    }
+
+    function ajouterAppartement() {
+      const select = document.getElementById('apptLocataire');
+      select.innerHTML = '<option value="">Aucun locataire</option>' + 
+        locataires.map(l => `<option value="${l.id}">${l.nom}</option>`).join('');
+      
+      document.getElementById('modalApptTitle').textContent = "Ajouter un appartement";
+      document.getElementById('apptId').value = '';
+      document.getElementById('apptNom').value = '';
+      document.getElementById('apptLoyer').value = '';
+      document.getElementById('apptStatut').value = 'loue';
+      document.getElementById('apptLocataire').value = '';
+      ouvrirModal('modalAppartement');
+    }
+
+    function modifierAppartement(id) {
+      const appt = appartements.find(a => a.id === id);
+      const select = document.getElementById('apptLocataire');
+      select.innerHTML = '<option value="">Aucun locataire</option>' + 
+        locataires.map(l => `<option value="${l.id}">${l.nom}</option>`).join('');
+      
+      document.getElementById('modalApptTitle').textContent = "Modifier l'appartement";
+      document.getElementById('apptId').value = appt.id;
+      document.getElementById('apptNom').value = appt.nom;
+      document.getElementById('apptLoyer').value = appt.loyer;
+      document.getElementById('apptStatut').value = appt.statut;
+      document.getElementById('apptLocataire').value = appt.locataireId || '';
+      ouvrirModal('modalAppartement');
+    }
+
+    document.getElementById('formAppartement').onsubmit = (e) => {
+      e.preventDefault();
+      const id = document.getElementById('apptId').value;
+      const locataireId = document.getElementById('apptLocataire').value || null;
+      
+      const data = {
+        id: id || Date.now().toString(),
+        nom: document.getElementById('apptNom').value,
+        loyer: parseFloat(document.getElementById('apptLoyer').value),
+        statut: document.getElementById('apptStatut').value,
+        locataireId: locataireId
+      };
+      
+      if (id) {
+        appartements = appartements.map(a => a.id === id ? data : a);
+      } else {
+        appartements.push(data);
+      }
+      
+      sauvegarder();
+      fermerModal('modalAppartement');
+    };
+
+    // NOUVEAU : Affichage des locataires avec suivi mensuel
+    function afficherLocataires() {
+      const moisListe = getDerniersMois(6);
+      
+      const html = locataires.map(loc => {
+        const appt = appartements.find(a => a.id === loc.appartementId);
+        
+        // Calculer le nombre de mois en retard
+        let retards = 0;
+        let montantRetard = 0;
+        moisListe.forEach(m => {
+          const statut = getStatutMois(loc.id, m.str);
+          if (statut.statut === 'retard') {
+            retards++;
+            montantRetard += appt?.loyer || 0;
+          }
+        });
+
+        return `
+          <div class="bg-white rounded-2xl shadow-lg p-6 border-2 ${retards > 0 ? 'border-red-200' : 'border-emerald-100'}">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <h3 class="text-2xl font-bold text-gray-800">${loc.nom}</h3>
+                <p class="text-gray-600">${loc.telephone}</p>
+                <p class="text-sm text-gray-500">
+                  <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-lg font-medium">${appt?.nom || '-'}</span>
+                  • ${appt?.loyer || 0} ${devise}/mois
+                </p>
+              </div>
+              <div class="text-right">
+                ${retards > 0 ? `
+                  <div class="bg-red-100 text-red-700 px-4 py-2 rounded-lg">
+                    <p class="font-bold text-lg">-${montantRetard} ${devise}</p>
+                    <p class="text-sm">${retards} mois en retard</p>
+                  </div>
+                ` : `
+                  <div class="bg-green-100 text-green-700 px-4 py-2 rounded-lg">
+                    <p class="font-bold">✓ À jour</p>
+                  </div>
+                `}
+              </div>
+            </div>
+
+            <div class="mt-4 pt-4 border-t border-gray-200">
+              <h4 class="font-semibold text-gray-700 mb-3">Suivi des 6 derniers mois</h4>
+              <div class="grid grid-cols-6 gap-2">
+                ${moisListe.map(m => {
+                  const statut = getStatutMois(loc.id, m.str);
+                  let className = '';
+                  let icon = '';
+                  let tooltip = '';
+                  
+                  if (statut.statut === 'paye') {
+                    className = 'bg-green-100 text-green-700 border-green-300';
+                    icon = '✓';
+                    tooltip = `Payé le ${new Date(statut.date).toLocaleDateString('fr-FR')}`;
+                  } else if (statut.statut === 'retard') {
+                    className = 'bg-red-100 text-red-700 border-red-300';
+                    icon = '⚠️';
+                    tooltip = `En retard (dû le ${statut.dateLimite.toLocaleDateString('fr-FR')})`;
+                  } else {
+                    className = 'bg-blue-50 text-blue-600 border-blue-200';
+                    icon = '○';
+                    tooltip = `Dû le ${statut.dateLimite.toLocaleDateString('fr-FR')}`;
+                  }
+                  
+                  return `
+                    <div class="border-2 ${className} rounded-lg p-2 text-center" title="${tooltip}">
+                      <div class="text-xs font-medium">${m.nom}</div>
+                      <div class="text-xl">${icon}</div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+              <div class="mt-3 flex gap-2 text-xs">
+                <div class="flex items-center gap-1"><span class="w-3 h-3 bg-green-100 border border-green-300 rounded"></span> Payé</div>
+                <div class="flex items-center gap-1"><span class="w-3 h-3 bg-red-100 border border-red-300 rounded"></span> En retard</div>
+                <div class="flex items-center gap-1"><span class="w-3 h-3 bg-blue-50 border border-blue-200 rounded"></span> À venir</div>
+              </div>
+            </div>
+
+            <button onclick="modifierLocataire('${loc.id}')" class="mt-4 w-full bg-emerald-100 text-emerald-700 px-4 py-2 rounded-lg font-medium hover:bg-emerald-200">
+              Modifier
+            </button>
+          </div>
+        `;
+      }).join('');
+      
+      document.getElementById('locatairesList').innerHTML = html;
+    }
+
+    function ajouterLocataire() {
+      const select = document.getElementById('locAppartement');
+      select.innerHTML = '<option value="">Sélectionner</option>' + 
+        appartements.map(a => `<option value="${a.id}">${a.nom}</option>`).join('');
+      
+      document.getElementById('modalLocTitle').textContent = "Ajouter un locataire";
+      document.getElementById('locId').value = '';
+      document.getElementById('locNom').value = '';
+      document.getElementById('locTelephone').value = '';
+      document.getElementById('locAppartement').value = '';
+      document.getElementById('locDateEntree').value = new Date().toISOString().split('T')[0];
+      ouvrirModal('modalLocataire');
+    }
+
+    function modifierLocataire(id) {
+      const loc = locataires.find(l => l.id === id);
+      const select = document.getElementById('locAppartement');
+      select.innerHTML = '<option value="">Sélectionner</option>' + 
+        appartements.map(a => `<option value="${a.id}">${a.nom}</option>`).join('');
+      
+      document.getElementById('modalLocTitle').textContent = "Modifier le locataire";
+      document.getElementById('locId').value = loc.id;
+      document.getElementById('locNom').value = loc.nom;
+      document.getElementById('locTelephone').value = loc.telephone;
+      document.getElementById('locAppartement').value = loc.appartementId;
+      document.getElementById('locDateEntree').value = loc.dateEntree;
+      ouvrirModal('modalLocataire');
+    }
+
+    document.getElementById('formLocataire').onsubmit = (e) => {
+      e.preventDefault();
+      const id = document.getElementById('locId').value;
+      const data = {
+        id: id || Date.now().toString(),
+        nom: document.getElementById('locNom').value,
+        telephone: document.getElementById('locTelephone').value,
+        appartementId: document.getElementById('locAppartement').value,
+        dateEntree: document.getElementById('locDateEntree').value
+      };
+      
+      if (id) {
+        locataires = locataires.map(l => l.id === id ? {...l, ...data} : l);
+      } else {
+        locataires.push(data);
+      }
+      
+      sauvegarder();
+      fermerModal('modalLocataire');
+    };
+
+    // Paiements
+    function afficherPaiements() {
+      const html = paiements
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .map((p, idx) => {
+          const loc = locataires.find(l => l.id === p.locataireId);
+          const appt = appartements.find(a => a.id === p.appartementId);
+          const moisNom = new Date(p.mois + '-01').toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+          
+          return `
+            <tr class="${idx % 2 === 0 ? 'bg-emerald-50/30' : 'bg-white'}">
+              <td class="px-6 py-4">${new Date(p.date).toLocaleDateString('fr-FR')}</td>
+              <td class="px-6 py-4">${loc?.nom}</td>
+              <td class="px-6 py-4">
+                <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-lg font-medium">${appt?.nom}</span>
+              </td>
+              <td class="px-6 py-4">${moisNom}</td>
+              <td class="px-6 py-4 font-bold text-emerald-700">${p.montant} ${devise}</td>
+              <td class="px-6 py-4">
+                <button onclick="genererQuittance('${p.id}')" class="bg-emerald-100 text-emerald-700 px-4 py-2 rounded-lg hover:bg-emerald-200">📄 Quittance</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      document.getElementById('paiementsList').innerHTML = html || '<tr><td colspan="6" class="text-center py-8 text-gray-500">Aucun paiement enregistré</td></tr>';
+    }
+
+    function ajouterPaiement() {
+      const select = document.getElementById('paiLocataire');
+      select.innerHTML = '<option value="">Sélectionner</option>' + 
+        locataires.map(l => `<option value="${l.id}">${l.nom}</option>`).join('');
+      
+      document.getElementById('paiMontant').value = '';
+      document.getElementById('paiDate').value = new Date().toISOString().split('T')[0];
+      document.getElementById('paiMois').value = new Date().toISOString().slice(0, 7);
+      ouvrirModal('modalPaiement');
+    }
+
+    document.getElementById('formPaiement').onsubmit = (e) => {
+      e.preventDefault();
+      const locId = document.getElementById('paiLocataire').value;
+      const loc = locataires.find(l => l.id === locId);
+      
+      const data = {
+        id: Date.now().toString(),
+        locataireId: locId,
+        appartementId: loc.appartementId,
+        montant: parseFloat(document.getElementById('paiMontant').value),
+        date: document.getElementById('paiDate').value,
+        mois: document.getElementById('paiMois').value,
+        statut: 'paye'
+      };
+      
+      paiements.push(data);
+      sauvegarder();
+      fermerModal('modalPaiement');
+    };
+
+    function genererQuittance(id) {
+      const p = paiements.find(pmt => pmt.id === id);
+      const loc = locataires.find(l => l.id === p.locataireId);
+      const appt = appartements.find(a => a.id === p.appartementId);
+      
+      const date = new Date(p.date);
+      const moisAnnee = new Date(p.mois + '-01');
+      const moisNom = moisAnnee.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+
+      const quittanceHTML = `<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Quittance de Loyer - ${appt.nom}</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; }
+    .header { text-align: center; border-bottom: 3px solid #2c5f2d; padding-bottom: 20px; margin-bottom: 30px; }
+    .header h1 { color: #2c5f2d; margin: 0; font-size: 28px; }
+    .header p { margin: 5px 0; color: #666; }
+    .info-section { margin: 20px 0; }
+    .info-section h2 { color: #2c5f2d; font-size: 18px; border-bottom: 2px solid #e0e0e0; padding-bottom: 5px; }
+    .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+    .info-label { font-weight: bold; color: #555; }
+    .total-section { background: #f8f9fa; padding: 20px; margin: 30px 0; border-left: 4px solid #2c5f2d; }
+    .total-amount { font-size: 24px; font-weight: bold; color: #2c5f2d; text-align: right; }
+    .footer { margin-top: 50px; text-align: right; }
+    .signature { margin-top: 60px; border-top: 1px solid #333; width: 200px; float: right; padding-top: 10px; text-align: center; }
+  </style>
 </head>
 <body>
-  <div id="root"></div>
-  
-  <script type="text/babel" src="./GestionLocativeKenge14-Congo.jsx"></script>
-  <script type="text/babel">
-    const { StrictMode } = React;
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(
-      <StrictMode>
-        <GestionLocativeKenge14 />
-      </StrictMode>
-    );
+  <div class="header">
+    <h1>QUITTANCE DE LOYER</h1>
+    <p>Immeuble KENGE 14</p>
+    <p>14 Avenue Kenge KIN01, Kinshasa, République Démocratique du Congo</p>
+  </div>
+  <div class="info-section">
+    <h2>Informations du Locataire</h2>
+    <div class="info-row"><span class="info-label">Nom :</span><span>${loc.nom}</span></div>
+    <div class="info-row"><span class="info-label">Téléphone :</span><span>${loc.telephone}</span></div>
+    <div class="info-row"><span class="info-label">Appartement :</span><span>${appt.nom}</span></div>
+  </div>
+  <div class="info-section">
+    <h2>Détails du Paiement</h2>
+    <div class="info-row"><span class="info-label">Période :</span><span>${moisNom}</span></div>
+    <div class="info-row"><span class="info-label">Date de paiement :</span><span>${date.toLocaleDateString('fr-FR')}</span></div>
+    <div class="info-row"><span class="info-label">Loyer mensuel :</span><span>${p.montant.toFixed(2)} ${devise}</span></div>
+  </div>
+  <div class="total-section">
+    <div class="info-row" style="border: none;">
+      <span class="info-label" style="font-size: 18px;">MONTANT TOTAL PAYÉ :</span>
+      <span class="total-amount">${p.montant.toFixed(2)} ${devise}</span>
+    </div>
+  </div>
+  <div style="margin: 30px 0; padding: 15px; background: #fff3cd; border-left: 4px solid #ffc107;">
+    <strong>Pour solde de tout compte</strong> concernant le loyer de ${moisNom}.
+  </div>
+  <div class="footer">
+    <p>Fait à Kinshasa, le ${new Date().toLocaleDateString('fr-FR')}</p>
+    <div class="signature">
+      <p style="margin: 0;">Le Propriétaire</p>
+      <p style="margin-top: 5px; font-size: 12px; color: #666;">Signature</p>
+    </div>
+  </div>
+</body>
+</html>`;
+
+      const blob = new Blob([quittanceHTML], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Quittance_${appt.nom}_${p.mois}.html`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function afficherPaiementsRecents() {
+      const recents = paiements
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .slice(0, 5);
+      
+      if (recents.length === 0) {
+        document.getElementById('paiementsRecents').innerHTML = '<p class="text-center text-gray-500 py-8">Aucun paiement enregistré</p>';
+        return;
+      }
+      
+      const html = recents.map(p => {
+        const loc = locataires.find(l => l.id === p.locataireId);
+        const appt = appartements.find(a => a.id === p.appartementId);
+        return `
+          <div class="flex items-center justify-between p-4 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl border border-emerald-100 mb-3">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold">
+                ${appt?.nom.slice(0, 2) || 'AP'}
+              </div>
+              <div>
+                <p class="font-semibold text-gray-800">${loc?.nom || 'Locataire'}</p>
+                <p class="text-sm text-gray-600">${appt?.nom || 'Appartement'} - ${new Date(p.mois + '-01').toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="font-bold text-emerald-700">${p.montant} ${devise}</p>
+              <p class="text-sm text-gray-500">${new Date(p.date).toLocaleDateString('fr-FR')}</p>
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      document.getElementById('paiementsRecents').innerHTML = html;
+    }
+
+    function afficherTout() {
+      afficherAppartements();
+      afficherLocataires();
+      afficherPaiements();
+      afficherPaiementsRecents();
+      
+      document.getElementById('totalAppts').textContent = appartements.length;
+      document.getElementById('loues').textContent = appartements.filter(a => a.statut === 'loue').length;
+      document.getElementById('vacants').textContent = appartements.filter(a => a.statut === 'vacant').length + ' vacant(s)';
+      
+      const revenu = appartements.filter(a => a.statut === 'loue').reduce((sum, a) => sum + a.loyer, 0);
+      document.getElementById('revenuTotal').textContent = revenu + ' ' + devise;
+      
+      // Calculer les loyers en retard
+      let totalRetards = 0;
+      locataires.forEach(loc => {
+        const moisListe = getDerniersMois(12);
+        moisListe.forEach(m => {
+          const statut = getStatutMois(loc.id, m.str);
+          if (statut.statut === 'retard') {
+            const appt = appartements.find(a => a.id === loc.appartementId);
+            if (appt) totalRetards++;
+          }
+        });
+      });
+      document.getElementById('enRetard').textContent = totalRetards;
+      
+      document.getElementById('deviseSelect').value = devise;
+    }
+
+    document.getElementById('deviseSelect').onchange = (e) => {
+      devise = e.target.value;
+      sauvegarder();
+    };
+
+    // Navigation - Méthode qui fonctionne
+    document.getElementById('nav-dashboard').onclick = function() {
+      document.getElementById('dashboard-tab').style.display = 'block';
+      document.getElementById('appartements-tab').style.display = 'none';
+      document.getElementById('locataires-tab').style.display = 'none';
+      document.getElementById('paiements-tab').style.display = 'none';
+      
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('border-emerald-600', 'bg-emerald-50', 'text-emerald-700');
+        b.classList.add('border-transparent', 'text-gray-600');
+      });
+      this.classList.add('border-emerald-600', 'bg-emerald-50', 'text-emerald-700');
+      this.classList.remove('border-transparent', 'text-gray-600');
+    };
+
+    document.getElementById('nav-appartements').onclick = function() {
+      document.getElementById('dashboard-tab').style.display = 'none';
+      document.getElementById('appartements-tab').style.display = 'block';
+      document.getElementById('locataires-tab').style.display = 'none';
+      document.getElementById('paiements-tab').style.display = 'none';
+      
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('border-emerald-600', 'bg-emerald-50', 'text-emerald-700');
+        b.classList.add('border-transparent', 'text-gray-600');
+      });
+      this.classList.add('border-emerald-600', 'bg-emerald-50', 'text-emerald-700');
+      this.classList.remove('border-transparent', 'text-gray-600');
+    };
+
+    document.getElementById('nav-locataires').onclick = function() {
+      document.getElementById('dashboard-tab').style.display = 'none';
+      document.getElementById('appartements-tab').style.display = 'none';
+      document.getElementById('locataires-tab').style.display = 'block';
+      document.getElementById('paiements-tab').style.display = 'none';
+      
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('border-emerald-600', 'bg-emerald-50', 'text-emerald-700');
+        b.classList.add('border-transparent', 'text-gray-600');
+      });
+      this.classList.add('border-emerald-600', 'bg-emerald-50', 'text-emerald-700');
+      this.classList.remove('border-transparent', 'text-gray-600');
+    };
+
+    document.getElementById('nav-paiements').onclick = function() {
+      document.getElementById('dashboard-tab').style.display = 'none';
+      document.getElementById('appartements-tab').style.display = 'none';
+      document.getElementById('locataires-tab').style.display = 'none';
+      document.getElementById('paiements-tab').style.display = 'block';
+      
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('border-emerald-600', 'bg-emerald-50', 'text-emerald-700');
+        b.classList.add('border-transparent', 'text-gray-600');
+      });
+      this.classList.add('border-emerald-600', 'bg-emerald-50', 'text-emerald-700');
+      this.classList.remove('border-transparent', 'text-gray-600');
+    };
+
+    // Initialiser
+    afficherTout();
   </script>
 </body>
 </html>
