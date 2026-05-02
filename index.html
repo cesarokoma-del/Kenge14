@@ -1442,15 +1442,24 @@ ${clauses ? `
 </body>
 </html>`;
 
-      // Sauvegarder le contrat dans l'historique avec le HTML complet
+      // Sauvegarder les données du contrat (pas le HTML)
       const contrat = {
         id: Date.now().toString(),
         appartementNom: apptNom,
         nomsLocataire,
+        adresseLocataire,
         dateDebut,
         dateFin,
-        dateCreation: new Date().toISOString(),
-        contratHTML: contratHTML  // Sauvegarder le HTML complet
+        chambres,
+        salons,
+        sallesBain,
+        autresElements,
+        occupants,
+        loyer,
+        garantie,
+        duree,
+        clauses,
+        dateCreation: new Date().toISOString()
       };
       contrats.push(contrat);
       sauvegarder();
@@ -1529,16 +1538,170 @@ ${clauses ? `
     }
     
     function voirContrat(contratId) {
-      const contrat = contrats.find(c => c.id === contratId);
-      if (!contrat || !contrat.contratHTML) {
+      const c = contrats.find(ct => ct.id === contratId);
+      if (!c) {
         alert('❌ Erreur: Contrat introuvable');
         return;
       }
       
+      // Régénérer le HTML du contrat à partir des données
+      const debutFormate = new Date(c.dateDebut).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+      const finFormate = new Date(c.dateFin).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+      const aujourdhui = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+      
+      const loyerLettres = nombreEnLettres(parseFloat(c.loyer));
+      const garantieLettres = nombreEnLettres(parseFloat(c.garantie));
+      
+      const contratHTML = `<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Contrat de Bail - ${c.nomsLocataire}</title>
+  <style>
+    @page { margin: 2cm; }
+    body { 
+      font-family: 'Times New Roman', Times, serif; 
+      font-size: 12pt;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1 { 
+      text-align: center; 
+      font-size: 18pt;
+      margin: 20px 0;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+    h2 {
+      font-size: 14pt;
+      margin-top: 25px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    p { 
+      text-align: justify; 
+      margin-bottom: 15px;
+      line-height: 1.8;
+    }
+    .article {
+      margin-bottom: 30px;
+      page-break-inside: avoid;
+    }
+    .signature-section {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 50px;
+    }
+    .signature-box {
+      flex: 1;
+      margin: 0 10px;
+    }
+    .signature-line {
+      border-top: 1px solid black;
+      margin-top: 50px;
+      padding-top: 5px;
+    }
+    strong { font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>CONTRAT DE BAIL D'HABITATION</h1>
+  
+  <div class="article">
+    <h2>Article 1 – Les parties</h2>
+    <p><strong>Le Bailleur :</strong> M. Cesar OKOMA, domicilié au n° 15, Avenue de la Science, Quartier Socimat, Commune de la Gombe, Ville de Kinshasa.</p>
+    <p><strong>Le Preneur :</strong> ${c.nomsLocataire}, domicilié au ${c.adresseLocataire}.</p>
+  </div>
+  
+  <div class="article">
+    <h2>Article 2 – Objet du bail</h2>
+    <p>Le Bailleur donne en location au Preneur qui accepte, un bien immobilier à usage d'<strong>HABITATION</strong>, situé au n° 14, Avenue Kenge, Quartier Mama Yemo, Commune de Ngaliema, Ville de Kinshasa.</p>
+    <p>Le bien loué comprend :</p>
+    <p>• ${c.chambres} chambre${c.chambres > 1 ? 's' : ''}<br>
+    • ${c.salons} salon${c.salons > 1 ? 's' : ''}<br>
+    • ${c.sallesBain} salle${c.sallesBain > 1 ? 's' : ''} de bain<br>
+    • ${c.autresElements}</p>
+    <p>Le nombre maximum d'occupants est fixé à <strong>${c.occupants} personne${c.occupants > 1 ? 's' : ''}</strong>.</p>
+  </div>
+  
+  <div class="article">
+    <h2>Article 3 – Montant du loyer et garantie locative</h2>
+    <p>Le loyer mensuel est fixé à <strong>${loyerLettres} dollars américains (${c.loyer} USD)</strong>, payable le dernier jour de chaque mois de consommation avec une période de grâce de cinq (5) jours calendrier.</p>
+    <p>Une garantie locative de <strong>${garantieLettres} dollars américains (${c.garantie} USD)</strong> est versée ce jour à la signature du présent contrat.</p>
+  </div>
+  
+  <div class="article">
+    <h2>Article 4 – Modalités de paiement</h2>
+    <p>Le loyer sera versé sur le compte bancaire suivant :</p>
+    <p><strong>EquityBCDC n° 233200011755382</strong></p>
+    <p>Ou via <strong>WhatsApp au +1 817 353 8862</strong></p>
+    <p>Le paiement du loyer devra être effectué au plus tard le dernier jour du mois de consommation, avec une période de grâce de cinq (5) jours calendrier.</p>
+  </div>
+  
+  <div class="article">
+    <h2>Article 5 – Obligations du Preneur</h2>
+    <p>Le Preneur s'engage à :</p>
+    <p>• Payer le loyer aux échéances convenues<br>
+    • Entretenir le bien loué en bon père de famille<br>
+    • Ne pas sous-louer sans accord écrit du Bailleur<br>
+    • Respecter le règlement intérieur et les lois en vigueur</p>
+  </div>
+  
+  <div class="article">
+    <h2>Article 6 – Charges et réparations</h2>
+    <p>Les charges d'eau et d'électricité sont à la charge du Preneur. Les réparations locatives courantes sont également à sa charge.</p>
+  </div>
+  
+  <div class="article">
+    <h2>Article 7 – Obligations du Bailleur</h2>
+    <p>Le Bailleur prendra à sa charge les grosses réparations qui ne sont pas imputables au Preneur.</p>
+    <p>Toute modification ou réparation envisagée par le Preneur devra faire l'objet d'un accord préalable et écrit du Bailleur.</p>
+  </div>
+  
+  <div class="article">
+    <h2>Article 8 – Durée du bail</h2>
+    <p>Le présent contrat est conclu pour une durée de <strong>${nombreEnTexte(c.duree)} (${c.duree}) mois</strong>, prenant effet le <strong>${debutFormate}</strong>, et renouvelable par tacite reconduction, sauf dénonciation ou résiliation dans les conditions prévues au présent contrat.</p>
+  </div>
+  
+  <div class="article">
+    <h2>Article 9 – Préavis</h2>
+    <p>En cas de résiliation, un préavis de <strong>quatre-vingt-dix (90) jours</strong> devra être respecté par la partie qui souhaite mettre fin au bail.</p>
+  </div>
+  
+  ${c.clauses ? `
+  <div class="article">
+    <h2>Article 10 – Clauses spéciales</h2>
+    <p>${c.clauses}</p>
+  </div>
+  ` : ''}
+  
+  <div class="signature-section">
+    <div class="signature-box">
+      <p><strong>Le Bailleur</strong></p>
+      <div class="signature-line">M. Cesar OKOMA</div>
+    </div>
+    
+    <div class="signature-box">
+      <p><strong>Le Preneur</strong></p>
+      <div class="signature-line">${c.nomsLocataire}</div>
+    </div>
+  </div>
+  
+  <p style="text-align: center; margin-top: 30px;"><em>Fait à Kinshasa, le ${aujourdhui}</em></p>
+</body>
+</html>`;
+      
       // Ouvrir le contrat dans une nouvelle fenêtre
       const newWindow = window.open('', '_blank');
-      newWindow.document.write(contrat.contratHTML);
-      newWindow.document.close();
+      if (newWindow) {
+        newWindow.document.write(contratHTML);
+        newWindow.document.close();
+      } else {
+        alert('❌ Impossible d\'ouvrir une nouvelle fenêtre.\nVeuillez autoriser les pop-ups pour ce site.');
+      }
     }
     
     function supprimerContrat(contratId) {
