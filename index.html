@@ -2059,7 +2059,8 @@ ${clauses ? `
       
       // Créer un lien unique pour ce renouvellement
       const lienId = `renouvellement-${Date.now()}`;
-      const lienComplet = `${window.location.origin}${window.location.pathname}?signer=${lienId}`;
+      const baseUrl = window.location.origin;
+      const lienComplet = `${baseUrl}/signature-renouvellement.html?signer=${lienId}`;
       
       // Sauvegarder les données du renouvellement
       const renouvellement = {
