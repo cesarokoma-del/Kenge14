@@ -1941,7 +1941,7 @@ ${clauses ? `
     function afficherRenouvellements() {
       const contratsActifs = contrats.filter(c => {
         const dateFin = new Date(c.dateFin);
-        const aujourd hui = new Date();
+        const aujourdhui = new Date();
         const joursRestants = Math.floor((dateFin - aujourdhui) / (1000 * 60 * 60 * 24));
         return joursRestants >= 0 && joursRestants <= 90; // 90 jours avant échéance
       });
