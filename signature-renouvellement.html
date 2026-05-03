@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signature du Renouvellement de Bail</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    #signatureCanvas {
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      touch-action: none;
+      cursor: crosshair;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    
+    <!-- Header -->
+    <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+      <h1 class="text-3xl font-bold text-gray-800 mb-2">🔄 Renouvellement de Bail</h1>
+      <p class="text-gray-600">KENGE 14 - Gestion Locative</p>
+    </div>
+
+    <!-- Contrat à signer -->
+    <div id="contratAffichage" class="bg-white rounded-xl shadow-lg p-6 mb-6">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">📄 Votre Contrat de Renouvellement</h2>
+      <div id="detailsContrat" class="space-y-3 bg-emerald-50 p-4 rounded-lg border border-emerald-200">
+        <p><strong>Chargement...</strong></p>
+      </div>
+    </div>
+
+    <!-- Zone de signature -->
+    <div id="zoneSignature" class="bg-white rounded-xl shadow-lg p-6 mb-6">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">✍️ Signez ici</h2>
+      
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Votre nom complet *</label>
+        <input type="text" id="nomSignataire" class="w-full border-2 border-gray-300 rounded-lg px-4 py-2" placeholder="Ex: Mme Ndimina Kyembe Adel">
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Signature tactile *</label>
+        <p class="text-sm text-gray-600 mb-2">Signez avec votre doigt ou votre souris dans la zone ci-dessous</p>
+        <canvas id="signatureCanvas" width="600" height="200" class="w-full bg-white"></canvas>
+        <button onclick="effacerSignature()" class="mt-2 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
+          🔄 Effacer
+        </button>
+      </div>
+
+      <div class="mt-6">
+        <label class="flex items-start gap-2">
+          <input type="checkbox" id="acceptation" class="mt-1">
+          <span class="text-sm text-gray-700">
+            J'accepte les termes du renouvellement de bail pour 12 mois supplémentaires aux mêmes conditions (loyer inchangé). 
+            Je comprends que ce contrat prendra effet à la fin du contrat actuel.
+          </span>
+        </label>
+      </div>
+
+      <button onclick="validerSignature()" class="w-full mt-6 px-6 py-4 bg-emerald-600 text-white rounded-xl font-bold text-lg hover:bg-emerald-700">
+        ✅ Signer et Envoyer
+      </button>
+    </div>
+
+    <!-- Message de confirmation -->
+    <div id="confirmation" style="display:none;" class="bg-green-50 border-2 border-green-200 rounded-xl p-6 text-center">
+      <div class="text-6xl mb-4">✅</div>
+      <h2 class="text-2xl font-bold text-green-800 mb-2">Contrat Signé !</h2>
+      <p class="text-green-700">Votre signature a été enregistrée avec succès.</p>
+      <p class="text-sm text-green-600 mt-2">Le propriétaire a été notifié.</p>
+    </div>
+
+  </div>
+
+  <script>
+    // Variables globales
+    let canvas, ctx;
+    let isDrawing = false;
+    let renouvellementData = null;
+
+    // Initialisation
+    window.onload = function() {
+      // Récupérer l'ID du renouvellement depuis l'URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const renouvellementId = urlParams.get('signer');
+      
+      if (!renouvellementId) {
+        alert('❌ Lien invalide');
+        return;
+      }
+
+      // Charger les données (dans une vraie app, ceci viendrait d'une API)
+      chargerRenouvellement(renouvellementId);
+      
+      // Initialiser le canvas de signature
+      canvas = document.getElementById('signatureCanvas');
+      ctx = canvas.getContext('2d');
+      ctx.strokeStyle = '#000000';
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+
+      // Events tactiles et souris
+      canvas.addEventListener('mousedown', startDrawing);
+      canvas.addEventListener('mousemove', draw);
+      canvas.addEventListener('mouseup', stopDrawing);
+      canvas.addEventListener('mouseout', stopDrawing);
+      
+      // Touch events pour mobile
+      canvas.addEventListener('touchstart', handleTouch);
+      canvas.addEventListener('touchmove', handleTouch);
+      canvas.addEventListener('touchend', stopDrawing);
+    };
+
+    function chargerRenouvellement(id) {
+      // Dans une vraie application, ceci ferait un appel API
+      // Pour l'instant, on simule avec localStorage (cross-domain ne marche pas)
+      
+      // Afficher un contrat exemple
+      const html = `
+        <div class="space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="font-semibold text-gray-700">Appartement :</span>
+            <span id="apptNom" class="font-bold text-gray-900">APT-3RZ</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="font-semibold text-gray-700">Locataire :</span>
+            <span id="locataireNom" class="font-bold text-gray-900">-</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="font-semibold text-gray-700">Loyer mensuel :</span>
+            <span id="loyer" class="font-bold text-emerald-700">400 USD</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="font-semibold text-gray-700">Durée :</span>
+            <span class="font-bold text-gray-900">12 mois</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="font-semibold text-gray-700">Date de début :</span>
+            <span id="dateDebut" class="font-bold text-gray-900">-</span>
+          </div>
+          <div class="mt-4 pt-4 border-t border-emerald-200">
+            <p class="text-sm text-gray-600">
+              ✅ Loyer inchangé<br>
+              ✅ Mêmes conditions que le contrat actuel<br>
+              ✅ Tacite reconduction<br>
+              ✅ Préavis de 90 jours
+            </p>
+          </div>
+        </div>
+      `;
+      document.getElementById('detailsContrat').innerHTML = html;
+      
+      // Stocker l'ID pour plus tard
+      renouvellementData = { id: id };
+    }
+
+    // Fonctions de dessin
+    function startDrawing(e) {
+      isDrawing = true;
+      const rect = canvas.getBoundingClientRect();
+      ctx.beginPath();
+      ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+      const rect = canvas.getBoundingClientRect();
+      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+      ctx.stroke();
+    }
+
+    function stopDrawing() {
+      isDrawing = false;
+    }
+
+    function handleTouch(e) {
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      
+      if (e.type === 'touchstart') {
+        isDrawing = true;
+        ctx.beginPath();
+        ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
+      } else if (e.type === 'touchmove' && isDrawing) {
+        ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
+        ctx.stroke();
+      }
+    }
+
+    function effacerSignature() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function validerSignature() {
+      const nom = document.getElementById('nomSignataire').value.trim();
+      const accepte = document.getElementById('acceptation').checked;
+      
+      if (!nom) {
+        alert('❌ Veuillez entrer votre nom complet');
+        return;
+      }
+      
+      if (!accepte) {
+        alert('❌ Veuillez accepter les termes du renouvellement');
+        return;
+      }
+      
+      // Vérifier qu'une signature a été dessinée
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      let hasSignature = false;
+      for (let i = 0; i < imageData.data.length; i += 4) {
+        if (imageData.data[i + 3] > 0) { // Alpha channel
+          hasSignature = true;
+          break;
+        }
+      }
+      
+      if (!hasSignature) {
+        alert('❌ Veuillez signer dans la zone prévue');
+        return;
+      }
+      
+      // Convertir la signature en image
+      const signatureImage = canvas.toDataURL('image/png');
+      
+      // Enregistrer la signature (dans une vraie app, ceci irait vers une API)
+      const signature = {
+        renouvellementId: renouvellementData.id,
+        nom: nom,
+        signature: signatureImage,
+        dateSignature: new Date().toISOString(),
+        statut: 'Signé'
+      };
+      
+      // Pour la démo, on stocke dans localStorage
+      try {
+        localStorage.setItem(`signature_${renouvellementData.id}`, JSON.stringify(signature));
+      } catch(e) {
+        // Ignore si cross-domain
+      }
+      
+      // Afficher la confirmation
+      document.getElementById('contratAffichage').style.display = 'none';
+      document.getElementById('zoneSignature').style.display = 'none';
+      document.getElementById('confirmation').style.display = 'block';
+      
+      // Dans une vraie app, envoyer une notification au propriétaire
+      console.log('Signature enregistrée:', signature);
+    }
+  </script>
+</body>
+</html>
