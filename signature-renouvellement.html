@@ -114,46 +114,57 @@
     };
 
     function chargerRenouvellement(id) {
-      // Dans une vraie application, ceci ferait un appel API
-      // Pour l'instant, on simule avec localStorage (cross-domain ne marche pas)
-      
-      // Afficher un contrat exemple
-      const html = `
-        <div class="space-y-3">
-          <div class="flex justify-between items-center">
-            <span class="font-semibold text-gray-700">Appartement :</span>
-            <span id="apptNom" class="font-bold text-gray-900">APT-3RZ</span>
+      // Récupérer les vraies données depuis localStorage
+      try {
+        const renouvellements = JSON.parse(localStorage.getItem('renouvellements')) || [];
+        const renouvellement = renouvellements.find(r => r.id === id);
+        
+        if (!renouvellement) {
+          alert('❌ Renouvellement introuvable');
+          return;
+        }
+        
+        // Afficher les vraies données
+        const html = `
+          <div class="space-y-3">
+            <div class="flex justify-between items-center">
+              <span class="font-semibold text-gray-700">Appartement :</span>
+              <span id="apptNom" class="font-bold text-gray-900">${renouvellement.appartementNom || 'N/A'}</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="font-semibold text-gray-700">Locataire :</span>
+              <span id="locataireNom" class="font-bold text-gray-900">${renouvellement.nomsLocataire || 'N/A'}</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="font-semibold text-gray-700">Loyer mensuel :</span>
+              <span id="loyer" class="font-bold text-emerald-700">${renouvellement.loyer || 'N/A'} USD</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="font-semibold text-gray-700">Durée :</span>
+              <span class="font-bold text-gray-900">12 mois</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="font-semibold text-gray-700">Date de début :</span>
+              <span id="dateDebut" class="font-bold text-gray-900">${renouvellement.dateFin ? new Date(renouvellement.dateFin).toLocaleDateString('fr-FR') : 'N/A'}</span>
+            </div>
+            <div class="mt-4 pt-4 border-t border-emerald-200">
+              <p class="text-sm text-gray-600">
+                ✅ Loyer inchangé (${renouvellement.loyer} USD)<br>
+                ✅ Mêmes conditions que le contrat actuel<br>
+                ✅ Tacite reconduction<br>
+                ✅ Préavis de 90 jours
+              </p>
+            </div>
           </div>
-          <div class="flex justify-between items-center">
-            <span class="font-semibold text-gray-700">Locataire :</span>
-            <span id="locataireNom" class="font-bold text-gray-900">-</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="font-semibold text-gray-700">Loyer mensuel :</span>
-            <span id="loyer" class="font-bold text-emerald-700">400 USD</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="font-semibold text-gray-700">Durée :</span>
-            <span class="font-bold text-gray-900">12 mois</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="font-semibold text-gray-700">Date de début :</span>
-            <span id="dateDebut" class="font-bold text-gray-900">-</span>
-          </div>
-          <div class="mt-4 pt-4 border-t border-emerald-200">
-            <p class="text-sm text-gray-600">
-              ✅ Loyer inchangé<br>
-              ✅ Mêmes conditions que le contrat actuel<br>
-              ✅ Tacite reconduction<br>
-              ✅ Préavis de 90 jours
-            </p>
-          </div>
-        </div>
-      `;
-      document.getElementById('detailsContrat').innerHTML = html;
-      
-      // Stocker l'ID pour plus tard
-      renouvellementData = { id: id };
+        `;
+        document.getElementById('detailsContrat').innerHTML = html;
+        
+        // Stocker les données pour la signature
+        renouvellementData = renouvellement;
+      } catch(e) {
+        console.error('Erreur chargement:', e);
+        alert('❌ Erreur lors du chargement des données');
+      }
     }
 
     // Fonctions de dessin
